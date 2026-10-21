@@ -250,6 +250,7 @@ function duelHostRemote(id, s) {
   }
   p.online = true;
   p.raw = s;
+  checkPeerVersion(id, p.name, s.ver);
   if (s.fin && HS.st === 'play' && s.fin.rd === HS.rd && HS.rw[HS.rd] == null) duelDeclare(id);
   if (HS.st === 'hide' && DU.clue && s.clue) duelStartSeek();
   hostSend();

@@ -84,13 +84,19 @@ function angleArc(ax, ay, vx, vy, col, label) {
   ctx.arc(cx, cy, rad, ra, ra + diff, diff < 0);
   ctx.stroke();
   const mid = ra + diff / 2;
-  textBox(
-    cx + Math.cos(mid) * (rad + 16),
-    cy + Math.sin(mid) * (rad + 16),
-    label,
-    col,
-    Math.cos(mid) < -0.3 ? 'right' : Math.cos(mid) > 0.3 ? 'left' : 'center',
-  );
+  // candidatas a lo largo del arco (en el medio, más afuera y hacia los extremos)
+  const cands = [
+    [mid, 16],
+    [mid, 34],
+    [ra + diff * 0.25, 18],
+    [ra + diff * 0.75, 18],
+  ].map(([a, d]) => ({
+    x: cx + Math.cos(a) * (rad + d),
+    y: cy + Math.sin(a) * (rad + d),
+    h: Math.cos(a) < -0.3 ? 'right' : Math.cos(a) > 0.3 ? 'left' : 'center',
+    v: 'middle',
+  }));
+  queueLabel({ key: 'ang', text: label, col, style: 'box', prio: 9, cands });
 }
 
 // Dibuja la escena del editor (se llama en cada cuadro).
@@ -209,7 +215,9 @@ function drawEdit() {
   ctx.textAlign = 'left';
   ctx.textBaseline = 'bottom';
   ctx.fillStyle = C['pencil-deep'];
-  ctx.fillText(`v₀ = ${fmtN(v.v0.def)} m/s · θ = ${fmtN(v.ang.def)}°`, lt.x + 8, lt.y - 6);
+  const ltTxt = `v₀ = ${fmtN(v.v0.def)} m/s · θ = ${fmtN(v.ang.def)}°`;
+  ctx.fillText(ltTxt, lt.x + 8, lt.y - 6);
+  labelObstacle(lt.x + 8, lt.y - 28, ctx.measureText(ltTxt).width, 22);
   drawBall(0, v.h0.def, 1, 0);
   if (E.sel && E.sel.type === 'launcher') {
     ctx.strokeStyle = C['pencil-deep'];

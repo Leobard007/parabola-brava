@@ -22,7 +22,17 @@ function hState() {
     void _keys;
     cfg = c;
   }
-  const s = { r: 'h', code: ON.code, md: ON.md, st: HS.st, ep: HS.ep, cfg, ro, kick: HS.kick.slice(-40) };
+  const s = {
+    r: 'h',
+    ver: APP_VERSION,
+    code: ON.code,
+    md: ON.md,
+    st: HS.st,
+    ep: HS.ep,
+    cfg,
+    ro,
+    kick: HS.kick.slice(-40),
+  };
   if (ON.md === 'duel')
     Object.assign(s, {
       hn: ME.name || L('Anfitrión', 'Host'),
@@ -137,6 +147,7 @@ function hostOnRemote(id, s) {
   if (p.raw === s) return;
   p.raw = s;
   p.online = true;
+  checkPeerVersion(id, p.name, s.ver);
   const wasDone = p.st === 'done';
   p.name =
     String(s.n || p.name)
@@ -234,6 +245,7 @@ window.addEventListener('beforeunload', (e) => {
 function pState() {
   const s = {
     r: 'p',
+    ver: APP_VERSION,
     code: ON.code,
     id: ME.id,
     n: ME.name,
@@ -352,6 +364,7 @@ function playerOnRemote(id, s) {
 
 // Reacciona a lo que dice el host: expulsión, inicio (cuenta regresiva), fin de partida...
 function handleHost(s, first) {
+  checkPeerVersion('host', s.hn || L('El host', 'The host'), s.ver);
   if (s.md === 'duel') {
     duelGuestHost(s, first);
     return;
