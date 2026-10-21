@@ -6,7 +6,8 @@
      - Carrera: el mismo nivel para los dos; gana la ronda quien lo complete primero.
        Si alguien falla, su nivel se reinicia al instante. Rondas: 1, al mejor de 3 o de 5.
      - Escondite: cada uno esconde un cerdito tocando el mapa; el juego genera vectores
-       (dificultad 1: uno; dificultad 2: de 2 a 3) como pistas. Hay que calcular las coordenadas
+       (dificultad 1: uno; dificultad 2: de 2 a 3) como pistas. Al empezar la búsqueda se anima el
+       recorrido (como offline) y el cerdito desaparece en una nube al llegar. Hay que calcular las coordenadas
        del cerdito del rival (con espera de 5 s tras cada error) y luego derribarlo
        (3 tiros; si fallas los 3, esperas 5 s y recargas). Gana quien lo derribe primero.
    Para ajustar tiempos, tiros o el tamaño del mapa, cambia los números de HIDE.
@@ -249,6 +250,7 @@ function duelHostRemote(id, s) {
   }
   p.online = true;
   p.raw = s;
+  checkPeerVersion(id, p.name, s.ver);
   if (s.fin && HS.st === 'play' && s.fin.rd === HS.rd && HS.rw[HS.rd] == null) duelDeclare(id);
   if (HS.st === 'hide' && DU.clue && s.clue) duelStartSeek();
   hostSend();
@@ -617,9 +619,9 @@ function buildSeekLevel(clue) {
     {
       ax: 3,
       ay: 0,
-      showPath: false,
+      showPath: true,
       hideScale: true,
-      tries: 6,
+      tries: 6, // showPath: se anima el recorrido como offline
       vecs: clue.vecs.map((v) => ({
         d: v.d,
         ang: v.ang,
@@ -653,7 +655,7 @@ function hideRenderFind() {
   });
   c += `</div><p class="hint">${L('Ángulos desde la horizontal. Suma las componentes: x = Σ |V|·cos θ (con signo), y = Σ |V|·sin θ (con signo).', 'Angles from the horizontal. Add up the components: x = Σ |V|·cos θ (signed), y = Σ |V|·sin θ (signed).')}</p>`;
   $('clues').innerHTML = c;
-  $('replay').hidden = true;
+  $('replay').hidden = solved;
   $('ansTitle').textContent = L('Coordenadas del cerdito', 'Piglet coordinates');
   if (!solved) {
     $('ansForm').hidden = false;

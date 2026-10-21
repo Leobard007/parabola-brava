@@ -692,6 +692,21 @@ function resetOnline() {
   $('onDetail').hidden = true;
   $('countdown').hidden = true;
 }
+// Avisa (una vez por persona) si alguien de la partida usa otra versión del juego
+// Personas a las que ya se avisó de una versión distinta.
+const VER_WARNED = new Set();
+
+// Avisa si alguien de la partida online usa otra versión del juego.
+function checkPeerVersion(id, name, ver) {
+  if (!ver || ver === APP_VERSION || VER_WARNED.has(id)) return;
+  VER_WARNED.add(id);
+  toast(
+    L(
+      `${name} usa la versión ${ver} y tú la ${APP_VERSION}. Actualicen en Configuración para evitar diferencias.`,
+      `${name} is on version ${ver} and you are on ${APP_VERSION}. Update in Settings to avoid differences.`,
+    ),
+  );
+}
 
 // Muestra un aviso temporal en la parte inferior de la pantalla.
 function toast(text) {

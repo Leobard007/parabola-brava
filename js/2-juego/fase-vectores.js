@@ -46,7 +46,11 @@ function updateAnim(dt) {
     a.prog = i + u;
     if (t >= total) {
       S.anim = null;
-      arriveVisual();
+      // Duelo Escondite: al llegar, el cerdito desaparece en una nube (reaparece al acertar las coordenadas)
+      if (S.online && S.online.mode === 'hide') {
+        puff(S.res.F.x, S.res.F.y + 0.6, C.target);
+        Tg.hidden = true;
+      } else arriveVisual();
     }
   } else {
     puff(m.ax, m.ay + 0.6, C.target);

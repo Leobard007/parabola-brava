@@ -51,6 +51,7 @@ para hablar con ese botón ($ es un atajo definido en js/1-nucleo/utilidades.js)
 parabola-brava/
 │
 ├── index.html ............ Estructura de todas las pantallas y carga de CSS/JS
+├── version.json .......... Número de la versión publicada (para avisar de actualizaciones)
 ├── LEEME.txt ............. Esta guía
 │
 ├── css/
@@ -85,6 +86,7 @@ parabola-brava/
     │   └── escena-y-guardado.js ... Arrastrar con el ratón, guardar y compartir
     │
     ├── 4-dibujo/ ......... Todo lo que se dibuja en el canvas
+    │   ├── etiquetas.js ........... Acomodo de etiquetas para que no se encimen
     │   ├── dibujo-juego.js ........ ★ Cuadrícula, bloques, cochinito, lanzador
     │   └── dibujo-editor.js ....... Extras del editor (agarradores, ángulos)
     │
@@ -248,6 +250,23 @@ AÑADIR UN PLANETA (gravedad)
 CAMBIAR LA FUERZA PARA ROMPER PIEDRA
   js/2-juego/fisica.js → impact → el número 18 (m/s).
 
+PUBLICAR UNA VERSIÓN NUEVA (para que todos reciban los cambios)
+  Los navegadores guardan copias de los archivos (caché). Para que descarguen
+  los nuevos, sube el número de versión en TRES lugares (mismo número):
+    1. js/1-nucleo/utilidades.js → const APP_VERSION = 8;   (cámbialo a 9)
+    2. version.json              → { "version": 8 }          (cámbialo a 9)
+    3. index.html                → todos los "?v=8" al final de los archivos css/js
+                                   (en VS Code: Ctrl+H, reemplazar ?v=8 por ?v=9)
+  Quien tenga el juego abierto verá en Configuración "Actualizar a v9";
+  al pulsarlo se descargan los archivos nuevos y la página se recarga.
+  Si un navegador sigue mostrando algo viejo: Ctrl + F5.
+
+ETIQUETAS DE LOS VECTORES
+  js/4-dibujo/etiquetas.js las acomoda para que no se encimen. Si no cabe una,
+  se oculta y queda un círculo "i" sobre su vector: pasa el ratón por encima
+  (o tócalo en el teléfono) para verla. Las prioridades (qué etiqueta gana el
+  espacio) están en el valor "prio" de cada llamada a queueLabel.
+
 CAMBIAR UN SONIDO
   js/1-nucleo/sonido.js → al final están los efectos (launch, pop, win...).
   tone(frecuenciaInicial, frecuenciaFinal, duración, tipoDeOnda, volumen)
@@ -318,6 +337,8 @@ TRES FORMAS DE JUGAR (botón Online del inicio)
         vectores-pista desde el lanzador (0, 0):
           dificultad 1 → un vector (magnitud y ángulo)
           dificultad 2 → de 2 a 3 vectores encadenados
+        Al empezar, el cerdito recorre los vectores (se pueden repetir con
+        "Repetir recorrido") y desaparece en una nube al llegar.
         Hay que calcular las coordenadas (x, y) del cerdito del rival
         (si fallas, esperas 5 s), y después derribarlo: 3 tiros; si fallas
         los 3, esperas 5 s y recargas. Gana quien lo derribe primero.

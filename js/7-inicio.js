@@ -40,8 +40,10 @@ function frame(ts) {
     }
     if (cw > 0) {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      labelsBegin(); // las etiquetas se juntan durante el dibujo...
       if (S.screen === 'edit') drawEdit();
       else drawPlay();
+      labelsFlush(); // ...y se acomodan al final para que no se encimen
     }
   } else {
     const animate = SET.anim && !reduceMotion;
@@ -69,4 +71,6 @@ window.__pb = {
 };
 applyStaticLang();
 showView('home');
+renderVersion();
+checkVersion(); // muestra la versión y revisa si hay una más nueva
 requestAnimationFrame(frame);

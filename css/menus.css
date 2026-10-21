@@ -418,3 +418,14 @@
   gap: 10px;
   flex-wrap: wrap;
 }
+
+/* versión en Configuración */
+.verRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+  border-top: 1px dashed var(--line);
+  padding-top: 10px;
+}

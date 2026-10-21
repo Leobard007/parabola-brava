@@ -28,12 +28,14 @@
       rel="stylesheet"
     />
 
-    <!-- Hojas de estilo (el orden importa: base.css primero porque define los colores) -->
-    <link rel="stylesheet" href="css/base.css" />
-    <link rel="stylesheet" href="css/menus.css" />
-    <link rel="stylesheet" href="css/juego.css" />
-    <link rel="stylesheet" href="css/editor.css" />
-    <link rel="stylesheet" href="css/online.css" />
+    <!-- Hojas de estilo (el orden importa: base.css primero porque define los colores).
+     El "?v=N" del final es el número de versión: al cambiarlo, el navegador descarga el archivo nuevo
+     en lugar de usar la copia guardada (caché). -->
+    <link rel="stylesheet" href="css/base.css?v=8" />
+    <link rel="stylesheet" href="css/menus.css?v=8" />
+    <link rel="stylesheet" href="css/juego.css?v=8" />
+    <link rel="stylesheet" href="css/editor.css?v=8" />
+    <link rel="stylesheet" href="css/online.css?v=8" />
   </head>
   <body>
     <!-- Canvas del fondo animado de los menús (lo dibuja js/6-menus/fondo-animado.js) -->
@@ -120,6 +122,10 @@
                 id="resetNote"
                 data-l="Borra estrellas y niveles desbloqueados. Tus niveles creados se conservan.|Clears stars and unlocked levels. Your own levels are kept."
               ></small>
+            </div>
+            <div class="verRow">
+              <small class="hint" id="verText"></small>
+              <button class="btn ghost small" id="btnUpdate" type="button"></button>
             </div>
           </div>
         </div>
@@ -691,45 +697,46 @@
      Si agregas un archivo nuevo, ponlo antes de 7-inicio.js.
      ==================================================================== -->
     <!-- Núcleo: utilidades, idioma, sonido, datos de niveles y estado -->
-    <script src="js/1-nucleo/utilidades.js"></script>
-    <script src="js/1-nucleo/idioma.js"></script>
-    <script src="js/1-nucleo/sonido.js"></script>
-    <script src="js/1-nucleo/variables.js"></script>
-    <script src="js/1-nucleo/vectores.js"></script>
-    <script src="js/1-nucleo/niveles.js"></script>
-    <script src="js/1-nucleo/guardado-y-estado.js"></script>
+    <script src="js/1-nucleo/utilidades.js?v=8"></script>
+    <script src="js/1-nucleo/idioma.js?v=8"></script>
+    <script src="js/1-nucleo/sonido.js?v=8"></script>
+    <script src="js/1-nucleo/variables.js?v=8"></script>
+    <script src="js/1-nucleo/vectores.js?v=8"></script>
+    <script src="js/1-nucleo/niveles.js?v=8"></script>
+    <script src="js/1-nucleo/guardado-y-estado.js?v=8"></script>
 
     <!-- Modo juego: cargar nivel, vectores, controles, física y fin de nivel -->
-    <script src="js/2-juego/nivel-y-hud.js"></script>
-    <script src="js/2-juego/fase-vectores.js"></script>
-    <script src="js/2-juego/controles.js"></script>
-    <script src="js/2-juego/fisica.js"></script>
-    <script src="js/2-juego/fin-de-nivel.js"></script>
+    <script src="js/2-juego/nivel-y-hud.js?v=8"></script>
+    <script src="js/2-juego/fase-vectores.js?v=8"></script>
+    <script src="js/2-juego/controles.js?v=8"></script>
+    <script src="js/2-juego/fisica.js?v=8"></script>
+    <script src="js/2-juego/fin-de-nivel.js?v=8"></script>
 
     <!-- Editor de niveles -->
-    <script src="js/3-editor/editor-base.js"></script>
-    <script src="js/3-editor/plantillas.js"></script>
-    <script src="js/3-editor/panel-variables.js"></script>
-    <script src="js/3-editor/tarjeta-y-piezas.js"></script>
-    <script src="js/3-editor/escena-y-guardado.js"></script>
+    <script src="js/3-editor/editor-base.js?v=8"></script>
+    <script src="js/3-editor/plantillas.js?v=8"></script>
+    <script src="js/3-editor/panel-variables.js?v=8"></script>
+    <script src="js/3-editor/tarjeta-y-piezas.js?v=8"></script>
+    <script src="js/3-editor/escena-y-guardado.js?v=8"></script>
 
     <!-- Dibujo de la escena en el canvas -->
-    <script src="js/4-dibujo/dibujo-juego.js"></script>
-    <script src="js/4-dibujo/dibujo-editor.js"></script>
+    <script src="js/4-dibujo/etiquetas.js?v=8"></script>
+    <script src="js/4-dibujo/dibujo-juego.js?v=8"></script>
+    <script src="js/4-dibujo/dibujo-editor.js?v=8"></script>
 
     <!-- Modo online -->
-    <script src="js/5-online/red.js"></script>
-    <script src="js/5-online/niveles-partida.js"></script>
-    <script src="js/5-online/host-y-jugador.js"></script>
-    <script src="js/5-online/duelo.js"></script>
-    <script src="js/5-online/pantallas-online.js"></script>
+    <script src="js/5-online/red.js?v=8"></script>
+    <script src="js/5-online/niveles-partida.js?v=8"></script>
+    <script src="js/5-online/host-y-jugador.js?v=8"></script>
+    <script src="js/5-online/duelo.js?v=8"></script>
+    <script src="js/5-online/pantallas-online.js?v=8"></script>
 
     <!-- Menús, guía y fondo animado -->
-    <script src="js/6-menus/menus.js"></script>
-    <script src="js/6-menus/guia-como-jugar.js"></script>
-    <script src="js/6-menus/fondo-animado.js"></script>
+    <script src="js/6-menus/menus.js?v=8"></script>
+    <script src="js/6-menus/guia-como-jugar.js?v=8"></script>
+    <script src="js/6-menus/fondo-animado.js?v=8"></script>
 
     <!-- Arranque del juego (SIEMPRE el último) -->
-    <script src="js/7-inicio.js"></script>
+    <script src="js/7-inicio.js?v=8"></script>
   </body>
 </html>

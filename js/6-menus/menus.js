@@ -339,3 +339,79 @@ $('btnReset').onclick = (e) => {
     if (!resetArmed) applyStaticLang();
   }, 3500);
 };
+
+/* ---------- versión y actualización ---------- */
+// Estado del buscador de actualizaciones (versión publicada y qué mostrar en el botón).
+const UPD = { remote: null, state: 'idle' }; // state: idle · checking · latest · newer · error · updating
+
+// Muestra la versión y el texto del botón en Configuración.
+function renderVersion() {
+  const t = $('verText'),
+    b = $('btnUpdate');
+  if (!t) return;
+  t.textContent =
+    L(`Versión ${APP_VERSION}`, `Version ${APP_VERSION}`) +
+    (UPD.state === 'latest'
+      ? L(' · la más reciente ✓', ' · up to date ✓')
+      : UPD.state === 'newer'
+        ? L(` · hay una nueva: v${UPD.remote}`, ` · a new one is out: v${UPD.remote}`)
+        : '');
+  b.textContent =
+    UPD.state === 'newer'
+      ? L(`Actualizar a v${UPD.remote}`, `Update to v${UPD.remote}`)
+      : UPD.state === 'checking'
+        ? L('Buscando…', 'Checking…')
+        : UPD.state === 'updating'
+          ? L('Actualizando…', 'Updating…')
+          : L('Buscar actualización', 'Check for updates');
+  b.disabled = UPD.state === 'checking' || UPD.state === 'updating';
+  b.classList.toggle('edit', UPD.state === 'newer');
+}
+// Pregunta al servidor qué versión está publicada (version.json), sin usar la copia guardada del navegador
+// Consulta version.json en el servidor (sin caché) para saber si hay una versión más nueva.
+async function checkVersion() {
+  if (!/^https?:/.test(location.protocol)) {
+    UPD.state = 'idle';
+    renderVersion();
+    return null;
+  }
+  UPD.state = 'checking';
+  renderVersion();
+  try {
+    const r = await fetch('version.json?t=' + Date.now(), { cache: 'no-store' });
+    const v = num((await r.json()).version, 0);
+    UPD.remote = v;
+    UPD.state = v > APP_VERSION ? 'newer' : 'latest';
+  } catch (e) {
+    UPD.state = 'error';
+  }
+  renderVersion();
+  return UPD.state;
+}
+// Descarga de nuevo todos los archivos del juego (saltándose la caché) y recarga la página
+// Vuelve a descargar todos los archivos del juego saltándose la caché y recarga la página.
+async function updateNow() {
+  UPD.state = 'updating';
+  renderVersion();
+  try {
+    const html = await (await fetch('index.html', { cache: 'reload' })).text();
+    const urls = [...html.matchAll(/(?:src|href)="((?:js|css)\/[^"]+)"/g)].map((m) => m[1]);
+    await Promise.all(urls.map((u) => fetch(u, { cache: 'reload' }).catch(() => {})));
+  } catch (e) {}
+  location.reload();
+}
+$('btnUpdate').onclick = async (e) => {
+  e.stopPropagation();
+  SND.click();
+  if (UPD.state === 'newer') {
+    updateNow();
+    return;
+  }
+  const st = await checkVersion();
+  if (st === 'newer') updateNow();
+  else if (st === 'latest')
+    toast(L('Ya tienes la versión más reciente.', 'You already have the latest version.'));
+  else if (st === 'error')
+    toast(L('No se pudo comprobar. ¿Hay internet?', 'Couldn’t check. Are you online?'));
+  else updateNow(); // abierto como archivo local: simplemente recarga
+};

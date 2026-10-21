@@ -393,13 +393,24 @@ function drawAim() {
   ctx.font = handFont();
   ctx.textAlign = 'left';
   ctx.textBaseline = 'middle';
-  ctx.fillText(`θ = ${P.ang}°`, ox + ar + 6, oy - Math.sin(th / 2) * ar - 2);
+  const thTxt = `θ = ${P.ang}°`,
+    thY = oy - Math.sin(th / 2) * ar - 2,
+    thW = ctx.measureText(thTxt).width;
+  ctx.fillText(thTxt, ox + ar + 6, thY);
+  labelObstacle(ox + ar + 6, thY - 10, thW, 20); // las etiquetas no se ponen encima de este texto
   if ($('practice').checked) {
     dashedPath(P.v0, P.ang, P.h0, g, S.def.W, C.pencil);
     const t2 = theory(P.v0, P.ang, P.h0, g);
-    marker(t2.range, 0, `R = ${f(t2.range, 1)} m`, C.pencil, 'below');
+    marker(t2.range, 0, `R = ${f(t2.range, 1)} m`, C.pencil, 'below', 'pr:range');
     if (t2.vy > 0)
-      marker(t2.vx * t2.tApex, t2.hmax, `${L('h máx', 'max h')} = ${f(t2.hmax, 1)} m`, C.pencil, 'above');
+      marker(
+        t2.vx * t2.tApex,
+        t2.hmax,
+        `${L('h máx', 'max h')} = ${f(t2.hmax, 1)} m`,
+        C.pencil,
+        'above',
+        'pr:hmax',
+      );
   } else {
     ctx.fillStyle = C.pencil;
     for (let t = 0.08; t <= 0.45; t += 0.06) {
@@ -418,12 +429,14 @@ function drawAim() {
   ctx.textAlign = 'left';
   ctx.textBaseline = 'bottom';
   ctx.fillStyle = C['pencil-deep'];
-  ctx.fillText(`v₀ = ${f(P.v0, 1)} m/s`, ex + 6, ey - 4);
+  const v0Txt = `v₀ = ${f(P.v0, 1)} m/s`;
+  ctx.fillText(v0Txt, ex + 6, ey - 4);
+  labelObstacle(ex + 6, ey - 26, ctx.measureText(v0Txt).width, 22);
   drawBall(0, P.h0, vx, vy);
 }
 
 // Marca un punto con un texto (ej. "h máx = 5 m").
-function marker(x, y, text, col, where) {
+function marker(x, y, text, col, where, key) {
   const px = X(x),
     py = Y(y);
   ctx.strokeStyle = col;
@@ -434,33 +447,29 @@ function marker(x, y, text, col, where) {
   ctx.moveTo(px + 5, py - 5);
   ctx.lineTo(px - 5, py + 5);
   ctx.stroke();
-  ctx.fillStyle = col;
-  ctx.font = handFont();
-  ctx.textAlign = 'center';
-  ctx.textBaseline = where === 'above' ? 'bottom' : 'top';
-  const tx = Math.min(cw - 60, Math.max(60, px));
-  ctx.fillText(text, tx, where === 'above' ? py - 8 : py + (y <= 0.01 ? -26 : 8));
+  const above = where === 'above',
+    ty = above ? py - 8 : py + (y <= 0.01 ? -8 : 8),
+    vv = above || y <= 0.01 ? 'bottom' : 'top';
+  // candidatas: centrada, desplazada a la derecha o a la izquierda, y del otro lado
+  queueLabel({
+    key: key || 'mk:' + text,
+    text,
+    col,
+    style: 'hand',
+    prio: 7,
+    pt: [px, py],
+    cands: [
+      { x: px, y: ty, h: 'center', v: vv },
+      { x: px + 10, y: ty, h: 'left', v: vv },
+      { x: px - 10, y: ty, h: 'right', v: vv },
+      { x: px, y: above ? py + 8 : py - 8, h: 'center', v: above ? 'top' : 'bottom' },
+    ],
+  });
 }
-
+// Etiqueta con recuadro en una posición fija (se acomoda con las demás)
 // Texto con fondo de papel, para que se lea sobre la cuadrícula.
 function textBox(px, py, text, col, align = 'left') {
-  ctx.font = `600 ${Math.round(Math.max(12, Math.min(15, V.s * 0.62)))}px 'IBM Plex Sans', sans-serif`;
-  const tw = ctx.measureText(text).width,
-    fs = parseInt(ctx.font.match(/(\d+)px/)[1], 10);
-  let x = align === 'center' ? px - tw / 2 : align === 'right' ? px - tw : px;
-  x = clamp(x, 4, cw - tw - 8);
-  const y = clamp(py - fs / 2 - 3, 4, ch - fs - 10);
-  ctx.fillStyle = C.paper;
-  ctx.globalAlpha *= 0.9;
-  ctx.fillRect(x - 4, y, tw + 8, fs + 6);
-  ctx.globalAlpha = Math.min(1, ctx.globalAlpha / 0.9);
-  ctx.strokeStyle = col;
-  ctx.lineWidth = 1;
-  ctx.strokeRect(x - 4 + 0.5, y + 0.5, tw + 8, fs + 6);
-  ctx.fillStyle = col;
-  ctx.textAlign = 'left';
-  ctx.textBaseline = 'top';
-  ctx.fillText(text, x, y + 3);
+  queueLabel({ text, col, style: 'box', prio: 1, cands: [{ x: px, y: py, h: align, v: 'middle' }] });
 }
 
 // Etiqueta de un punto (A, B) con sus coordenadas.
@@ -474,19 +483,22 @@ function pointLabel(x, y, name, text, col) {
   ctx.arc(px, py, 5, 0, Math.PI * 2);
   ctx.fill();
   ctx.stroke();
-  ctx.font = handFont(1.05);
-  ctx.textAlign = 'left';
-  ctx.textBaseline = 'top';
   const label = text ? `${name} ${text}` : name;
-  const tw = ctx.measureText(label).width,
-    tx = Math.min(cw - tw - 6, px + 8),
-    fs = parseInt(ctx.font, 10);
-  ctx.fillStyle = C.paper;
-  ctx.globalAlpha = 0.85;
-  ctx.fillRect(tx - 3, py + 5, tw + 6, fs + 4);
-  ctx.globalAlpha = 1;
-  ctx.fillStyle = col;
-  ctx.fillText(label, tx, py + 6);
+  // abajo a la derecha (como siempre), arriba a la derecha, abajo a la izquierda o arriba a la izquierda
+  queueLabel({
+    key: 'pt:' + name,
+    text: label,
+    col,
+    style: 'point',
+    prio: 6,
+    pt: [px, py],
+    cands: [
+      { x: px + 8, y: py + 5, h: 'left', v: 'top' },
+      { x: px + 8, y: py - 7, h: 'left', v: 'bottom' },
+      { x: px - 8, y: py + 5, h: 'right', v: 'top' },
+      { x: px - 8, y: py - 7, h: 'right', v: 'bottom' },
+    ],
+  });
 }
 /* Dibuja los vectores (hasta `upto` tramos) con su etiqueta. labelFn(i) devuelve el texto o null. */
 // Dibuja la cadena de vectores con sus etiquetas.
@@ -504,18 +516,17 @@ function drawVectors(pts, upto, col, labelFn) {
     if (u >= 1 && labelFn) {
       const txt = labelFn(i);
       if (!txt) continue;
-      const mx = (X(a.x) + X(b.x)) / 2,
-        my = (Y(a.y) + Y(b.y)) / 2;
-      let nx = -(Y(b.y) - Y(a.y)),
-        ny = X(b.x) - X(a.x);
-      const nl = Math.hypot(nx, ny) || 1;
-      nx /= nl;
-      ny /= nl;
-      if (ny > 0) {
-        nx = -nx;
-        ny = -ny;
-      } // etiqueta hacia arriba del vector
-      textBox(mx + nx * 16, my + ny * 16, txt, col, nx < -0.3 ? 'right' : nx > 0.3 ? 'left' : 'center');
+      const seg = [X(a.x), Y(a.y), X(b.x), Y(b.y)];
+      // la etiqueta prefiere ir arriba del vector; si choca, prueba otros lugares (ver etiquetas.js)
+      queueLabel({
+        key: 'v' + i,
+        text: txt,
+        col,
+        style: 'box',
+        prio: 4,
+        seg,
+        cands: segCands(...seg, 1, 14),
+      });
     }
   }
 }
@@ -541,18 +552,9 @@ function drawResultant(m, r, col, label, comps) {
   arrow(X(A.x), Y(A.y), X(F.x), Y(F.y), col, 3, 12);
   ctx.setLineDash([]);
   if (label) {
-    const mx = (X(A.x) + X(F.x)) / 2,
-      my = (Y(A.y) + Y(F.y)) / 2;
-    let nx = -(Y(F.y) - Y(A.y)),
-      ny = X(F.x) - X(A.x);
-    const nl = Math.hypot(nx, ny) || 1;
-    nx /= nl;
-    ny /= nl;
-    if (ny < 0) {
-      nx = -nx;
-      ny = -ny;
-    } // la de R va por debajo, para no chocar con los vectores
-    textBox(mx + nx * 18, my + ny * 18, label, col, nx < -0.3 ? 'right' : nx > 0.3 ? 'left' : 'center');
+    const seg = [X(A.x), Y(A.y), X(F.x), Y(F.y)];
+    // la de R prefiere ir por debajo, para no chocar con los vectores
+    queueLabel({ key: 'R', text: label, col, style: 'box', prio: 5, seg, cands: segCands(...seg, -1, 16) });
   }
 }
 
@@ -682,15 +684,22 @@ function drawPlay() {
     }
     if (p.done && p.hit !== 'out') {
       if (p.ymax > p.h0 + 0.3)
-        marker(p.apexX, p.ymax, `${L('h máx', 'max h')} = ${f(p.ymax, 1)} m`, C.ink, 'above');
-      marker(p.x, Math.max(0, p.y), `x = ${f(p.x, 1)} m`, C.ink, 'below');
+        marker(p.apexX, p.ymax, `${L('h máx', 'max h')} = ${f(p.ymax, 1)} m`, C.ink, 'above', 'sh:hmax');
+      marker(p.x, Math.max(0, p.y), `x = ${f(p.x, 1)} m`, C.ink, 'below', 'sh:x');
     }
   } else if (S.last && S.mode === 'aim' && S.last.hit !== 'out') {
     const q = S.last;
     ctx.globalAlpha = 0.7;
     if (q.ymax > q.h0 + 0.3)
-      marker(q.apexX, q.ymax, `${L('h máx', 'max h')} = ${f(q.ymax, 1)} m`, C['ink-soft'], 'above');
-    marker(q.x, Math.max(0, q.y), `x = ${f(q.x, 1)} m`, C['ink-soft'], 'below');
+      marker(
+        q.apexX,
+        q.ymax,
+        `${L('h máx', 'max h')} = ${f(q.ymax, 1)} m`,
+        C['ink-soft'],
+        'above',
+        'sh:hmax',
+      );
+    marker(q.x, Math.max(0, q.y), `x = ${f(q.x, 1)} m`, C['ink-soft'], 'below', 'sh:x');
     ctx.globalAlpha = 1;
   }
   drawParts();
