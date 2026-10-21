@@ -218,23 +218,57 @@ function solutionHTML() {
       )
       .join('');
   h += `<div class="sub">${L('Todos los valores del problema', 'Every value in the problem')}</div>`;
+  // Cada cálculo se escribe como en el cuaderno: fórmula, sustitución y resultado (ver js/1-nucleo/ecuaciones.js)
+  const k = (t) => `<span class="k">${t}</span>`;
   m.vecs.forEach((V, i) => {
     const v = r.vals[i],
-      n = vname(i);
+      n = vname(i),
+      s = n.slice(1);
+    h += `<div class="mhead">${n} · ${kindLabel(V.kind).toLowerCase()}</div>`;
     if (V.kind === 'vel')
-      h += `<div><span class="k">|${n}|</span> = v·t = ${fmtN(v.v)}·${fmtN(v.t)} = <b>${f(v.d)} m</b></div>`;
+      h += M.eq(k(`|${n}|`), 'v t', `${fmtN(v.v)} ${M.dot} ${fmtN(v.t)}`, M.res(f(v.d), 'm'));
     if (V.kind === 'acc')
-      h += `<div><span class="k">|${n}|</span> = v₀·t + ½·a·t² = ${fmtN(v.v0)}·${fmtN(v.t)} + ½·${fmtN(v.a)}·${fmtN(v.t)}² = <b>${f(v.d)} m</b></div>`;
-    h += `<div><span class="k">${n}</span>: |${n}| = ${f(v.d)} m, θ = ${f(v.ang, 1)}°, ${dirLow(v.dir)} → Δx = <b>${sg(v.x)}</b>, Δy = <b>${sg(v.y)}</b></div>`;
+      h += M.eq(
+        k(`|${n}|`),
+        `v₀ t + ${M.half} a t${M.sup(2)}`,
+        `${fmtN(v.v0)} ${M.dot} ${fmtN(v.t)} + ${M.half} ${M.dot} ${fmtN(v.a)} ${M.dot} ${fmtN(v.t)}${M.sup(2)}`,
+        M.res(f(v.d), 'm'),
+      );
+    h +=
+      `<div class="mnote">|${n}| = ${f(v.d)} m · θ${s} = ${fmtN(v.ang)}° · ${dirLow(v.dir)}</div>` +
+      compEqs(i, v);
   });
   const vs = r.vals;
-  h += `<div><span class="k">Rₓ</span> = ${vs.length > 1 ? vs.map((v) => sg(v.x)).join(' ') + ' = ' : ''}<b>${sg(r.dx)} m</b></div>
-    <div><span class="k">Rᵧ</span> = ${vs.length > 1 ? vs.map((v) => sg(v.y)).join(' ') + ' = ' : ''}<b>${sg(r.dy)} m</b></div>
-    <div><span class="k">|R|</span> = √(Rₓ² + Rᵧ²) = √(${f(r.dx * r.dx)} + ${f(r.dy * r.dy)}) = <b>${f(r.mag)} m</b></div>
-    <div><span class="k">${L('θ de R', 'θ of R')}</span> = arctan(|Rᵧ| / |Rₓ|) = arctan(${f(Math.abs(r.dy))} / ${f(Math.abs(r.dx))}) = <b>${f(r.angH, 1)}°</b></div>
-    <div><span class="k">${L('Dirección de R', 'Direction of R')}</span>: <b>${dirLow(r.dir)}</b></div>`;
+  h +=
+    `<div class="mhead">${L('Resultante R', 'Resultant R')}</div>` +
+    sumEq(k('Rₓ'), 'x', vs, r.dx) +
+    sumEq(k('Rᵧ'), 'y', vs, r.dy) +
+    M.eq(
+      k('|R|'),
+      M.sqrt(`Rₓ${M.sup(2)} + Rᵧ${M.sup(2)}`),
+      M.sqrt(`${M.sq(r.dx)} + ${M.sq(r.dy)}`),
+      M.sqrt(`${f(r.dx * r.dx)} + ${f(r.dy * r.dy)}`),
+      M.res(f(r.mag), 'm'),
+    ) +
+    (Math.abs(r.dx) < 1e-6
+      ? M.eq(k(L('θ de R', 'θ of R')), M.res('90°') + ` <span class="mnote">(Rₓ = 0)</span>`)
+      : M.eq(
+          k(L('θ de R', 'θ of R')),
+          `tan${M.sup('−1')} ${M.par(M.frac('|Rᵧ|', '|Rₓ|'))}`,
+          `tan${M.sup('−1')} ${M.par(M.frac(f(Math.abs(r.dy)), f(Math.abs(r.dx))))}`,
+          M.res(f(r.angH, 1) + '°'),
+        )) +
+    `<div><span class="k">${L('Dirección de R', 'Direction of R')}</span>: <b>${dirLow(r.dir)}</b></div>`;
   if (S.def.type === 'mixto') {
-    h += `<div><span class="k">B</span> = A + R = (${f(m.ax, 1)} ${sg(r.dx)}, ${f(m.ay, 1)} ${sg(r.dy)}) = <b>(${f(r.F.x)}, ${f(r.F.y)}) m</b></div>
+    h +=
+      M.eq(
+        k('B'),
+        'A + R',
+        `(x<sub>A</sub> + Rₓ, y<sub>A</sub> + Rᵧ)`,
+        `(${M.sum([m.ax, r.dx])}, ${M.sum([m.ay, r.dy])})`,
+        M.res(`(${f(r.F.x)}, ${f(r.F.y)})`, 'm'),
+      ) +
+      `
       <div class="next">${L('Ahora la escala está visible. Lanza para alcanzar al cochinito en B.', 'The scale is visible now. Launch to hit the piglet at B.')}</div>`;
   }
   return h;

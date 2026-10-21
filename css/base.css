@@ -80,3 +80,116 @@ textarea:focus-visible {
 body.menu button:focus-visible {
   outline-color: var(--gold);
 }
+
+/* ---- ecuaciones con formato de cuaderno (las crea js/1-nucleo/ecuaciones.js) ---- */
+.meq {
+  display: inline-grid;
+  grid-template-columns: auto auto auto;
+  column-gap: 0.4em;
+  row-gap: 0.3em;
+  align-items: center;
+  align-self: flex-start;
+  font-family: 'Cambria Math', 'STIX Two Math', 'Latin Modern Math', 'Cambria', 'Times New Roman', serif;
+  font-size: 16.5px;
+  line-height: 1.25;
+  margin: 0.2em 0;
+  white-space: nowrap;
+}
+.meq .ml {
+  justify-self: end;
+}
+.meq .mo {
+  justify-self: center;
+  color: var(--ink-soft);
+}
+.meq .mr {
+  justify-self: start;
+}
+.mfrac {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  vertical-align: middle;
+  margin: 0 0.12em;
+  line-height: 1.15;
+  font-size: 0.95em;
+}
+.mnum {
+  padding: 0 0.25em 0.1em;
+  border-bottom: 1.4px solid currentColor;
+  text-align: center;
+}
+.mden {
+  padding: 0.1em 0.25em 0;
+  text-align: center;
+}
+.msqrt {
+  display: inline-flex;
+  align-items: stretch;
+  vertical-align: middle;
+}
+.mroot {
+  width: 0.62em;
+  align-self: stretch;
+  height: auto;
+  flex: none;
+  overflow: visible;
+}
+.mroot path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.4px;
+  vector-effect: non-scaling-stroke;
+  stroke-linejoin: round;
+}
+.mrad {
+  border-top: 1.4px solid currentColor;
+  padding: 0.14em 0.15em 0.02em 0.12em;
+}
+.mpar {
+  font-size: 1.9em;
+  line-height: 1;
+  vertical-align: middle;
+  font-weight: 300;
+  display: inline-block;
+  transform: translateY(-0.04em);
+}
+.msup {
+  font-size: 0.68em;
+  vertical-align: 0.6em;
+  line-height: 0;
+}
+.mdot {
+  margin: 0 0.05em;
+}
+.mres {
+  font-weight: 700;
+}
+.mi {
+  font-family: 'Cambria Math', 'STIX Two Math', 'Latin Modern Math', 'Cambria', 'Times New Roman', serif;
+  font-size: 1.08em;
+  white-space: nowrap;
+}
+.mi .mfrac {
+  font-size: 0.85em;
+}
+.mnote {
+  font-family: var(--f-body);
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  white-space: normal;
+}
+.mhead {
+  font-family: var(--f-body);
+  font-weight: 700;
+  font-size: 13px;
+  margin-top: 8px;
+  border-top: 1px dashed var(--line);
+  padding-top: 6px;
+}
+.mpair {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 28px;
+  align-items: center;
+}
