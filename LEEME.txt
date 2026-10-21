@@ -318,6 +318,8 @@ TRES FORMAS DE JUGAR (botón Online del inicio)
         vectores-pista desde el lanzador (0, 0):
           dificultad 1 → un vector (magnitud y ángulo)
           dificultad 2 → de 2 a 3 vectores encadenados
+        Al empezar, el cerdito recorre los vectores (se pueden repetir con
+        "Repetir recorrido") y desaparece en una nube al llegar.
         Hay que calcular las coordenadas (x, y) del cerdito del rival
         (si fallas, esperas 5 s), y después derribarlo: 3 tiros; si fallas
         los 3, esperas 5 s y recargas. Gana quien lo derribe primero.
