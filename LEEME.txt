@@ -1,0 +1,377 @@
+====================================================================
+  PARÁBOLA BRAVA — GUÍA DEL CÓDIGO
+  Juego de tiro parabólico y vectores (HTML + CSS + JavaScript, sin librerías)
+====================================================================
+
+Esta guía explica cómo está organizado el proyecto y cómo modificarlo,
+pensada para alguien con conocimientos básicos de HTML, CSS y JavaScript.
+
+CONTENIDO
+  1. Cómo abrir el juego
+  2. Las tres piezas de una página web
+  3. Mapa de carpetas y archivos
+  4. Cómo funciona el juego, paso a paso
+  5. Conceptos de JavaScript que vas a ver
+  6. Recetas para personalizar
+  7. La física del juego
+  8. Cómo funciona el modo Online
+  9. Si algo se rompe
+ 10. Publicar en GitHub Pages
+
+
+--------------------------------------------------------------------
+1. CÓMO ABRIR EL JUEGO
+--------------------------------------------------------------------
+- Opción rápida: doble clic en index.html. Casi todo funciona así.
+- Opción recomendada (para que funcione todo, incluido el modo Online):
+  abrir la carpeta con un pequeño servidor local. Por ejemplo:
+    * Visual Studio Code + la extensión "Live Server" → clic derecho en
+      index.html → "Open with Live Server".
+    * O en una terminal, dentro de la carpeta:  python3 -m http.server
+      y luego abrir http://localhost:8000 en el navegador.
+- Cada vez que guardes un cambio en un archivo, recarga la página (F5).
+
+
+--------------------------------------------------------------------
+2. LAS TRES PIEZAS DE UNA PÁGINA WEB
+--------------------------------------------------------------------
+  index.html → la ESTRUCTURA: qué elementos existen (botones, paneles,
+               el canvas donde se dibuja el juego...).
+  css/       → el ASPECTO: colores, tamaños, tipografías, posiciones.
+  js/        → el COMPORTAMIENTO: física, menús, editor, modo online...
+
+El JavaScript encuentra los elementos del HTML por su id. Por ejemplo, en
+index.html existe  <button id="fire">  y en JavaScript se usa  $('fire')
+para hablar con ese botón ($ es un atajo definido en js/1-nucleo/utilidades.js).
+
+
+--------------------------------------------------------------------
+3. MAPA DE CARPETAS Y ARCHIVOS
+--------------------------------------------------------------------
+parabola-brava/
+│
+├── index.html ............ Estructura de todas las pantallas y carga de CSS/JS
+├── LEEME.txt ............. Esta guía
+│
+├── css/
+│   ├── base.css .......... COLORES y fuentes de todo el juego (empieza aquí)
+│   ├── menus.css ......... Inicio, selección de niveles, configuración, guía
+│   ├── juego.css ......... Pantalla de juego, controles, paneles, botones
+│   ├── editor.css ........ Editor de niveles
+│   └── online.css ........ Modo online (sala, panel del host, podio...)
+│
+└── js/
+    ├── 1-nucleo/ ......... Lo básico que usan todos los demás
+    │   ├── utilidades.js .......... Funciones pequeñas (redondear, formatear...)
+    │   ├── idioma.js .............. Español/inglés y configuración guardada
+    │   ├── sonido.js .............. Efectos de sonido sintetizados
+    │   ├── variables.js ........... v₀, ángulo, altura, gravedad y sus límites
+    │   ├── vectores.js ............ Matemática de los vectores y "¿tiene solución?"
+    │   ├── niveles.js ............. ★ LOS NIVELES DEL JUEGO (para crear los tuyos)
+    │   └── guardado-y-estado.js ... Progreso guardado y estado del juego
+    │
+    ├── 2-juego/ .......... Lo que pasa mientras juegas
+    │   ├── nivel-y-hud.js ......... Cargar un nivel y la barra de información
+    │   ├── fase-vectores.js ....... Resolver incógnitas de vectores
+    │   ├── controles.js ........... Deslizadores, botón Lanzar, teclado
+    │   ├── fisica.js .............. ★ Vuelo del proyectil, choques y puntos
+    │   └── fin-de-nivel.js ........ Ganar, perder, estrellas
+    │
+    ├── 3-editor/ ......... El editor de niveles
+    │   ├── editor-base.js ......... Abrir/cerrar, deshacer, herramientas
+    │   ├── plantillas.js .......... Plantillas de un clic
+    │   ├── panel-variables.js ..... Panel "Variables del problema"
+    │   ├── tarjeta-y-piezas.js .... Tarjeta flotante y colocación de piezas
+    │   └── escena-y-guardado.js ... Arrastrar con el ratón, guardar y compartir
+    │
+    ├── 4-dibujo/ ......... Todo lo que se dibuja en el canvas
+    │   ├── dibujo-juego.js ........ ★ Cuadrícula, bloques, cochinito, lanzador
+    │   └── dibujo-editor.js ....... Extras del editor (agarradores, ángulos)
+    │
+    ├── 5-online/ ......... Partidas online
+    │   ├── red.js ................. Conexión (MQTT, PeerJS, salas de claude.ai, local)
+    │   ├── niveles-partida.js ..... Niveles de cada jugador (iguales o distintos)
+    │   ├── host-y-jugador.js ...... Lógica del host y de los jugadores (partida de clase)
+    │   ├── duelo.js ............... Duelos 1 vs 1: Carrera y Escondite
+    │   └── pantallas-online.js .... Pantallas, selector de niveles, panel del host, CSV
+    │
+    ├── 6-menus/
+    │   ├── menus.js ............... Cambiar de pantalla, tarjetas y configuración
+    │   ├── guia-como-jugar.js ..... La guía de 4 pasos
+    │   └── fondo-animado.js ....... El fondo azul tipo plano de ingeniería
+    │
+    └── 7-inicio.js ....... Arranque y bucle principal (siempre se carga al final)
+
+★ = los archivos más útiles para personalizar el juego.
+
+Cada archivo empieza con un comentario que explica qué hace, y cada función
+tiene encima un comentario que explica para qué sirve.
+
+
+--------------------------------------------------------------------
+4. CÓMO FUNCIONA EL JUEGO, PASO A PASO
+--------------------------------------------------------------------
+a) El navegador lee index.html, carga los CSS y después los JavaScript
+   EN ORDEN (mira la lista de <script> al final de index.html).
+
+b) Todos los archivos .js comparten las mismas variables y funciones.
+   Lo que se define en un archivo se puede usar en los archivos siguientes.
+   Por eso el orden importa: 1-nucleo primero, 7-inicio.js al final.
+
+   Detalle importante: dentro de una función puedes llamar a funciones de
+   CUALQUIER archivo, porque las funciones se ejecutan después, cuando todo
+   ya está cargado. Pero el código que se ejecuta inmediatamente (fuera de
+   una función) solo puede usar lo que ya se cargó antes.
+
+c) 7-inicio.js arranca el juego: traduce los textos, muestra la pantalla de
+   inicio y empieza el "bucle principal" (la función frame).
+
+d) El BUCLE PRINCIPAL se repite unas 60 veces por segundo
+   (requestAnimationFrame). En cada vuelta:
+     1. avanza la física (proyectil, piezas que caen, partículas),
+     2. revisa el tiempo límite si estás en una partida online,
+     3. dibuja la escena completa en el canvas (drawPlay o drawEdit),
+        o el fondo animado si estás en un menú.
+
+e) Los botones y teclas funcionan con "eventos": por ejemplo
+     $('fire').addEventListener('click', () => fire());
+   significa "cuando hagan clic en el botón fire, ejecuta la función fire".
+
+f) Las pantallas (inicio, selección, juego, online) existen todas en el HTML;
+   la función showView('nombre') muestra una y oculta las demás.
+
+Los tres "estados" principales (objetos que guardan cómo está todo):
+  S  → el juego en curso (nivel, piezas, tiros, puntos, proyectil...)
+  E  → el editor (nivel en edición, herramienta, selección, historial...)
+  ON / HS / ME → el modo online (conexión, partida del host, datos del jugador)
+
+
+--------------------------------------------------------------------
+5. CONCEPTOS DE JAVASCRIPT QUE VAS A VER
+--------------------------------------------------------------------
+const x = 5;         Variable que NO se vuelve a asignar.
+let y = 5;           Variable que SÍ puede cambiar.
+
+FUNCIONES
+  function suma(a, b) { return a + b; }     Forma clásica.
+  const suma = (a, b) => a + b;             "Función flecha": lo mismo, más corto.
+  () => fire()                              Función sin parámetros que llama a fire.
+
+TEXTOS CON VARIABLES (template literals) — se escriben con comillas invertidas ` `
+  `Tienes ${n} tiros`     → si n = 3, da "Tienes 3 tiros".
+  Se usan mucho para construir HTML:  `<b>${nombre}</b>`
+
+OBJETOS Y LISTAS
+  const p = { v0: 18, ang: 45 };   p.v0 → 18      (objeto: datos con nombre)
+  const lista = [1, 2, 3];         lista[0] → 1    (array: lista ordenada)
+
+MÉTODOS DE LISTAS
+  lista.forEach(x => ...)     hace algo con cada elemento
+  lista.map(x => x * 2)       crea una lista nueva transformando cada elemento
+  lista.filter(x => x > 1)    se queda con los que cumplen la condición
+  lista.find(x => x.id === 'c1')   devuelve el primero que cumple
+  lista.some(...) / every(...)     ¿alguno / todos cumplen?
+
+OTROS ATAJOS
+  a ? b : c          "si a, entonces b; si no, c"
+  a || b             a, o b si a está vacío/falso
+  a?.b               lee a.b solo si a existe (si no, da undefined sin error)
+  { ...obj, x: 1 }   copia obj y cambia/añade x
+  const { a, b } = obj;   saca a y b de obj en dos variables
+
+ASÍNCRONO (cosas que tardan, como conectarse a internet)
+  async function f() { const r = await algo(); }
+  "await" espera a que termine "algo" sin congelar la página.
+
+EL NAVEGADOR
+  document.getElementById('x')   busca un elemento (el juego usa $('x'))
+  el.textContent = 'hola'        cambia el texto de un elemento
+  el.innerHTML = '<b>hola</b>'   cambia su contenido HTML
+  el.hidden = true               lo oculta
+  el.onclick = () => ...         qué hacer al hacer clic
+  localStorage                   pequeño almacén del navegador que no se borra
+                                 al cerrar la página (progreso, niveles, idioma)
+
+EL CANVAS (dibujo)
+  ctx.fillStyle = 'red';  ctx.fillRect(x, y, ancho, alto);   rectángulo relleno
+  ctx.beginPath(); ctx.moveTo(...); ctx.lineTo(...); ctx.stroke();   líneas
+  ctx.arc(x, y, radio, 0, Math.PI * 2)   círculo
+  ctx.fillText('texto', x, y)            texto
+  En el juego, el mundo está en METROS. Las funciones X(metros) e Y(metros)
+  convierten a píxeles de la pantalla.
+
+
+--------------------------------------------------------------------
+6. RECETAS PARA PERSONALIZAR
+--------------------------------------------------------------------
+CAMBIAR LOS COLORES
+  css/base.css → bloque :root. Cada color tiene un comentario.
+  Ejemplo: cambia  --target: #93c23e;  por  --target: #e85d9a;  y el
+  cochinito se vuelve rosa (también en el dibujo del canvas).
+
+CAMBIAR LAS FUENTES
+  css/base.css → --f-display, --f-body, --f-mono, --f-hand.
+  Si usas otra fuente de Google Fonts, cambia también el <link> en index.html.
+
+CAMBIAR UN TEXTO
+  Busca la frase en español en todos los archivos (en VS Code: Ctrl+Shift+F).
+    - Si está en index.html: data-l="Texto en español|Text in English"
+    - Si está en un .js:      L('Texto en español', 'Text in English')
+  Cambia ambas versiones.
+
+CAMBIAR EL NOMBRE DEL JUEGO
+  index.html: el <title> y los elementos con clase "logo" y "brandSmall".
+
+CAMBIAR LA PUNTUACIÓN
+  js/2-juego/fisica.js      → killTarget (500 por objetivo), breakBlock (50 madera, 100 piedra)
+  js/2-juego/fin-de-nivel.js → win (1000 por tiro sobrante, estrellas)
+  js/2-juego/fase-vectores.js → checkAnswer (1500, 1000, 600... según el intento)
+
+CREAR UN NIVEL NUEVO (fácil)
+  1. En el juego: Jugar → Editor de niveles. Diséñalo y pruébalo.
+  2. Pulsa "Generar y copiar código" para guardarlo como texto, o
+     "Guardar en mis niveles".
+
+CREAR UN NIVEL NUEVO (en el código, para que venga incluido)
+  js/1-nucleo/niveles.js → copia un nivel de la lista CAMPAIGN y cambia:
+    { id: 'c6', name: 'Mi nivel', name_en: 'My level', W: 50, shots: 3,
+      terrain: [{ x: 20, w: 2, h: 5 }],
+      objs: [B(35, 0, 1, 3, 'stone'), T(35.5, 3)] },
+  - id debe ser único.
+  - B(x, y, ancho, alto, 'wood' o 'stone') = bloque.  T(x, y) = cochinito.
+  - Todas las medidas en metros. x = distancia al lanzador, y = altura.
+  El nivel aparece automáticamente en el menú de selección.
+
+AÑADIR UN PLANETA (gravedad)
+  js/1-nucleo/variables.js → lista GRAVS:   [3.7, ['Mercurio', 'Mercury']],
+
+CAMBIAR LA FUERZA PARA ROMPER PIEDRA
+  js/2-juego/fisica.js → impact → el número 18 (m/s).
+
+CAMBIAR UN SONIDO
+  js/1-nucleo/sonido.js → al final están los efectos (launch, pop, win...).
+  tone(frecuenciaInicial, frecuenciaFinal, duración, tipoDeOnda, volumen)
+  Prueba cambiar 'triangle' por 'square' o subir las frecuencias.
+
+SONIDO APAGADO POR DEFECTO
+  js/1-nucleo/idioma.js → en SET, cambia  sound: true  por  sound: false.
+  (Ojo: si ya habías abierto el juego, manda la configuración que guardó tu
+  navegador; cámbiala en el menú Configuración o borra el localStorage.)
+
+CAMBIAR LA GUÍA "CÓMO JUGAR"
+  js/6-menus/guia-como-jugar.js → lista HOW.
+
+CAMBIAR EL FONDO ANIMADO
+  js/6-menus/fondo-animado.js → función drawBG.
+  Para quitar la animación por defecto: en js/1-nucleo/idioma.js, cambia
+  anim: !reduceMotion  por  anim: false.
+
+CAMBIAR LAS REGLAS ONLINE POR DEFECTO
+  js/5-online/red.js → DEFAULT_RULES (intentos, tiempo, tabla de posiciones...).
+
+AJUSTAR EL ESCONDITE (duelo)
+  js/5-online/duelo.js → HIDE: tamaño del mapa, zona donde se puede esconder,
+  espera tras un error (LOCK, en milisegundos), espera para recargar (COOL)
+  y tiros por recarga (SHOTS).
+
+USAR TU PROPIO SERVIDOR MQTT
+  js/5-online/red.js → MQTT_BROKERS. Pon tu dirección (wss://...) al principio.
+
+AÑADIR UNA PLANTILLA AL EDITOR
+  js/3-editor/plantillas.js → copia un elemento de TPL_VEC, TPL_PAR o TPL_MIX.
+
+
+--------------------------------------------------------------------
+7. LA FÍSICA DEL JUEGO
+--------------------------------------------------------------------
+TIRO PARABÓLICO (sin resistencia del aire) — js/2-juego/fisica.js y controles.js
+  vx = v₀ · cos θ                 (velocidad horizontal, constante)
+  vy₀ = v₀ · sin θ                (velocidad vertical inicial)
+  x(t) = vx · t
+  y(t) = h₀ + vy₀ · t − ½ · g · t²
+  Altura máxima: h₀ + vy₀² / (2g)
+  El proyectil avanza con la fórmula EXACTA (no aproximada) y se revisan
+  choques 12 veces por cuadro para no atravesar bloques delgados.
+
+VECTORES — js/1-nucleo/vectores.js
+  Distancia:            |V| = d
+  Velocidad · tiempo:   |V| = v · t
+  Aceleración · tiempo: |V| = v₀ · t + ½ · a · t²
+  Componentes:  Δx = ±|V| · cos θ ,  Δy = ±|V| · sin θ  (el signo depende de la dirección)
+  Resultante:   Rx = suma de los Δx ,  Ry = suma de los Δy ,  |R| = √(Rx² + Ry²)
+  La función analyze() decide si un problema tiene solución: parte de los
+  datos visibles y aplica estas fórmulas hasta que no puede deducir nada más.
+
+
+--------------------------------------------------------------------
+8. CÓMO FUNCIONA EL MODO ONLINE
+--------------------------------------------------------------------
+TRES FORMAS DE JUGAR (botón Online del inicio)
+  - Unirse a un juego: escribes tu nombre y el código de 5 caracteres.
+  - Partida de clase: el host elige niveles y reglas, no juega y ve el
+    progreso de todos (respuestas, tiros, tiempos) y puede descargar un CSV.
+  - Duelo 1 vs 1: dos jugadores compiten (el creador también juega):
+      * Carrera: el mismo nivel para los dos; gana la ronda quien lo complete
+        primero. Si alguien falla, su nivel se reinicia al instante.
+        Rondas: 1, al mejor de 3 o al mejor de 5.
+      * Escondite: cada uno esconde un cerdito en el mapa. El juego genera
+        vectores-pista desde el lanzador (0, 0):
+          dificultad 1 → un vector (magnitud y ángulo)
+          dificultad 2 → de 2 a 3 vectores encadenados
+        Hay que calcular las coordenadas (x, y) del cerdito del rival
+        (si fallas, esperas 5 s), y después derribarlo: 3 tiros; si fallas
+        los 3, esperas 5 s y recargas. Gana quien lo derribe primero.
+      Durante el duelo, una barra muestra lo que está haciendo el rival.
+
+CÓMO SE CONECTAN LOS DISPOSITIVOS
+- No hay un servidor propio del juego: el navegador del HOST (quien crea la
+  partida) guarda las reglas y decide quién gana.
+- Fuera de claude.ai (por ejemplo en GitHub Pages) el juego prueba, en orden:
+    1. MQTT (broker.emqx.io)      ← servidores públicos y gratuitos, los mismos
+    2. MQTT (broker.hivemq.com)     que se usan con ESP32. Los mensajes pasan por
+                                    el servidor, así que funciona entre redes distintas.
+    3. PeerJS (conexión directa entre navegadores) como respaldo.
+  El host usa el primero que conecta; los jugadores buscan la partida en cada uno.
+- Con MQTT, cada participante publica su estado completo en su propio "tema":
+    parabolabrava/v1/CÓDIGO/h       (host)
+    parabolabrava/v1/CÓDIGO/p/ID    (cada jugador)
+  Los mensajes son "retenidos" (quien entra tarde recibe el último estado) y el
+  "testamento" (will) borra el estado si alguien se desconecta de golpe.
+- PRIVACIDAD: los servidores MQTT públicos los puede leer cualquiera que conozca
+  el tema. El juego solo envía nombres, puntos y respuestas, pero no escribas datos
+  personales en el nombre. Para una clase puedes usar tu propio servidor MQTT:
+  agrégalo al principio de MQTT_BROKERS en js/5-online/red.js.
+- "Valores distintos por jugador" usa un generador aleatorio con semilla
+  (función rng): cada jugador recibe siempre los mismos valores aunque
+  recargue la página, y siempre se comprueba que el problema tenga solución.
+- Para probar sin internet en una sola computadora: abre el juego en dos
+  pestañas con ?net=local al final de la dirección
+  (ej. http://localhost:8000/?net=local).
+- Otras opciones en la dirección (para pruebas):
+    ?net=mqtt        solo MQTT        ?net=peer   solo PeerJS
+    ?mqtt=wss://mi-servidor:8084/mqtt  usar otro servidor MQTT
+
+--------------------------------------------------------------------
+9. SI ALGO SE ROMPE
+--------------------------------------------------------------------
+- Abre la consola del navegador: F12 → pestaña "Console". Ahí aparecen los
+  errores en rojo con el archivo y la línea.
+- Errores típicos al editar:
+    * Falta una coma entre elementos de una lista u objeto:  { a: 1  b: 2 }
+    * Llaves o paréntesis sin cerrar: ( ) { } [ ]
+    * Comillas mezcladas: 'texto"
+    * "X is not defined": escribiste mal un nombre, o usas algo de un
+      archivo que se carga después (revisa el orden en index.html).
+- Si el juego se queda "raro" por datos viejos guardados: Configuración →
+  Reiniciar progreso, o en la consola:  localStorage.clear()  y recarga.
+- Para curiosear el modo online desde la consola: window.__pbOnline
+
+
+--------------------------------------------------------------------
+10. PUBLICAR EN GITHUB PAGES
+--------------------------------------------------------------------
+1. Sube TODA la carpeta (index.html, css/, js/ y este archivo) a la raíz
+   de un repositorio de GitHub, conservando las carpetas.
+2. Settings → Pages → "Deploy from a branch" → rama main → carpeta / (root).
+3. En uno o dos minutos estará en  https://TU-USUARIO.github.io/NOMBRE-DEL-REPO/
+Cada vez que subas cambios, la página se actualiza sola en uno o dos minutos.

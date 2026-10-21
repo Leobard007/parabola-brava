@@ -1,0 +1,82 @@
+/* ==================================================================
+   ARCHIVO: css/base.css
+
+   BASE: COLORES, TIPOGRAFÍAS Y ESTILOS GENERALES
+   Aquí están las "variables CSS" (las que empiezan con --) que definen los colores y fuentes
+   de TODO el juego. Cambia un valor aquí y cambia en todas partes, incluso en la escena del
+   canvas (el JavaScript lee estos colores al iniciar).
+     --bg      fondo de la página del juego      --panel  fondo de los paneles
+     --ink     color del texto y bordes          --pencil rojo de los botones y acentos
+     --vector  azul de los vectores              --mixed  morado del modo mixto
+     --wood / --stone / --target  colores de madera, piedra y cochinito
+     --bp...   colores del plano azul de los menús   --gold dorado de los menús
+   ================================================================== */
+
+/* Paleta y tipografías. Cambia aquí los colores y fuentes de todo el juego. */
+:root {
+  --bg: #d9e4dc; /* fondo de la página del juego */
+  --panel: #f4f8f3; /* fondo de paneles y tarjetas */
+  --paper: #edf4ee; /* papel de la escena */
+  --grid: #d3e3d6; /* líneas finas de la cuadrícula */
+  --grid-major: #a9c8b2; /* líneas gruesas de la cuadrícula */
+  --ink: #1c2a48; /* texto principal y bordes */
+  --ink-soft: #56657f; /* texto secundario */
+  --line: #b8cdbe; /* bordes suaves */
+  --pencil: #d4483b; /* rojo de acento (botones, lanzador) */
+  --pencil-deep: #a5302a; /* rojo oscuro */
+  --vector: #2f5fb3; /* azul de los vectores */
+  --mixed: #7a4bb0; /* morado del modo mixto */
+  --wood: #d1934f; /* madera */
+  --wood-dark: #8f5a26; /* borde de la madera */
+  --stone: #9aa3b2; /* piedra */
+  --stone-dark: #5f6878; /* borde de la piedra */
+  --target: #93c23e; /* cochinito (verde) */
+  --target-dark: #4f7a17; /* borde del cochinito */
+  --earth: #86705a; /* tierra del suelo */
+  --earth-dark: #5b4836; /* borde de la tierra */
+  --ok-bg: #e2efd6; /* fondo verde claro (correcto) */
+  --inc-bg: #dce6f7; /* fondo azul claro (incógnita) */
+  --bp: #10213d; /* azul del plano de los menús */
+  --bp-line: #a8c2ee; /* líneas del plano */
+  --bp-text: #e8f0ff; /* texto sobre el plano */
+  --bp-soft: #b3c6e6; /* texto suave sobre el plano */
+  --gold: #ffd166; /* dorado (código online, selección) */
+  --f-display: 'Lilita One', 'Trebuchet MS', sans-serif; /* fuente de títulos */
+  --f-body: 'IBM Plex Sans', system-ui, -apple-system, sans-serif; /* fuente del texto */
+  --f-mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace; /* fuente de números */
+  --f-hand: 'Kalam', 'Comic Sans MS', cursive; /* fuente "a mano" de la escena */
+  color-scheme: light;
+}
+* {
+  box-sizing: border-box;
+}
+/* Todo elemento con el atributo hidden queda oculto (el JavaScript lo quita para mostrarlo). */
+[hidden] {
+  display: none !important;
+}
+html,
+body {
+  background: var(--bg);
+  color: var(--ink);
+}
+body {
+  font-family: var(--f-body);
+  font-size: 15px;
+  line-height: 1.45;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 16px 28px;
+}
+body.menu {
+  background: var(--bp);
+}
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid var(--pencil);
+  outline-offset: 2px;
+}
+body.menu button:focus-visible {
+  outline-color: var(--gold);
+}
