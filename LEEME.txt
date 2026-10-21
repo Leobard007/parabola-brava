@@ -254,24 +254,13 @@ CAMBIAR LA FUERZA PARA ROMPER PIEDRA
 PUBLICAR UNA VERSIÓN NUEVA (para que todos reciban los cambios)
   Los navegadores guardan copias de los archivos (caché). Para que descarguen
   los nuevos, sube el número de versión en TRES lugares (mismo número):
-    1. js/1-nucleo/utilidades.js → const APP_VERSION = 9;   (cámbialo a 10)
-    2. version.json              → { "version": 9 }          (cámbialo a 10)
-    3. index.html                → todos los "?v=9" al final de los archivos css/js
-                                   (en VS Code: Ctrl+H, reemplazar ?v=9 por ?v=10)
-  Quien tenga el juego abierto verá en Configuración "Actualizar a v10";
+    1. js/1-nucleo/utilidades.js → const APP_VERSION = 8;   (cámbialo a 9)
+    2. version.json              → { "version": 8 }          (cámbialo a 9)
+    3. index.html                → todos los "?v=8" al final de los archivos css/js
+                                   (en VS Code: Ctrl+H, reemplazar ?v=8 por ?v=9)
+  Quien tenga el juego abierto verá en Configuración "Actualizar a v9";
   al pulsarlo se descargan los archivos nuevos y la página se recarga.
   Si un navegador sigue mostrando algo viejo: Ctrl + F5.
-
-ECUACIONES (formato de cuaderno)
-  js/1-nucleo/ecuaciones.js tiene funciones para escribir fórmulas como en papel:
-    M.frac('a', 'b')       fracción con barra horizontal
-    M.sqrt('x')            raíz cuadrada con barra
-    M.sup('2')             exponente
-    M.half                 ½ apilado
-    M.eq(izq, paso1, paso2, ...)   pasos uno debajo del otro, con el = alineado
-  Ejemplo:  M.eq('vₓ', 'v₀ cos θ', '18 · cos 45°', M.res('12.73', 'm/s'))
-  El aspecto (tipografía, tamaño, grosor de las barras) está al final de
-  css/base.css, en la sección "ecuaciones".
 
 ETIQUETAS DE LOS VECTORES
   js/4-dibujo/etiquetas.js las acomoda para que no se encimen. Si no cabe una,
