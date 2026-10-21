@@ -653,7 +653,7 @@ function hideRenderFind() {
     const v = r.vals[i];
     c += `<div class="vrow"><b>${vname(i)}</b> <span class="mono">|${vname(i)}| = ${fmtN(v.d)} m${isPure(v.dir) ? '' : ` · θ = ${fmtN(v.ang)}°`} · ${L('dirección', 'direction')}: ${dirLow(v.dir)}</span></div>`;
   });
-  c += `</div><p class="hint">${L('Ángulos desde la horizontal. Suma las componentes: x = Σ |V|·cos θ (con signo), y = Σ |V|·sin θ (con signo).', 'Angles from the horizontal. Add up the components: x = Σ |V|·cos θ (signed), y = Σ |V|·sin θ (signed).')}</p>`;
+  c += `</div><p class="hint">${L('Ángulos desde la horizontal. Suma las componentes:', 'Angles from the horizontal. Add up the components:')} ${M.inl('x = Δx₁ + Δx₂ + …')}, ${M.inl('y = Δy₁ + Δy₂ + …')}, ${L('con', 'with')} ${M.inl('Δx = ±|V| cos θ')} ${L('y', 'and')} ${M.inl('Δy = ±|V| sin θ')} ${L('(el signo depende de la dirección).', '(the sign depends on the direction).')}</p>`;
   $('clues').innerHTML = c;
   $('replay').hidden = solved;
   $('ansTitle').textContent = L('Coordenadas del cerdito', 'Piglet coordinates');
@@ -682,8 +682,8 @@ function hideRenderFind() {
     $('ansSol').hidden = false;
     const vs = r.vals;
     $('ansSol').innerHTML = `<div class="sub">${L('¡Encontrado!', 'Found!')}</div>
-      <div><span class="k">x</span> = ${vs.map((v) => sg(v.x)).join(' ')} = <b>${f(r.F.x)} m</b></div>
-      <div><span class="k">y</span> = ${vs.map((v) => sg(v.y)).join(' ')} = <b>${f(r.F.y)} m</b></div>
+      ${vs.map((v, i) => compEqs(i, v)).join('')}
+      ${sumEq('<span class="k">x</span>', 'x', vs, r.F.x)}${sumEq('<span class="k">y</span>', 'y', vs, r.F.y)}
       <div class="next">${L(`Ahora derríbalo: tienes ${HIDE.SHOTS} tiros. Si fallas los ${HIDE.SHOTS}, esperas 5 s y recargas.`, `Now knock it down: you have ${HIDE.SHOTS} shots. If you miss all ${HIDE.SHOTS}, wait 5 s and reload.`)}</div>`;
   }
 }

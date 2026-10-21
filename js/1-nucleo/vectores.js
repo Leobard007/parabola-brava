@@ -69,8 +69,10 @@ const kindLabel = (k) =>
 const kindNote = (k) =>
   ({
     dist: L('desplazamiento', 'displacement'),
-    vel: L('velocidad constante: |V| = v·t', 'constant speed: |V| = v·t'),
-    acc: L('aceleración constante: |V| = v₀·t + ½·a·t²', 'constant acceleration: |V| = v₀·t + ½·a·t²'),
+    vel: L('velocidad constante: ', 'constant speed: ') + M.inl('|V| = v t'),
+    acc:
+      L('aceleración constante: ', 'constant acceleration: ') +
+      M.inl(`|V| = v₀ t + ${M.half} a t${M.sup(2)}`),
   })[k];
 
 // Qué magnitudes tiene cada tipo de vector (d = distancia, v = velocidad, t = tiempo, a = aceleración, v0 = velocidad inicial,

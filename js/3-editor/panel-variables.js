@@ -43,14 +43,20 @@ function derivedNote(owner, q, V, m) {
   if (owner === 'R')
     return L(`al cambiarlo se ajusta ${vname(adjIndex(m))}`, `changing it adjusts ${vname(adjIndex(m))}`);
   if (q === 'd' && V.kind === 'vel')
-    return L(
-      `= v·t (al cambiarlo se ajusta ${V.stretch === 't' ? 't' : 'v'})`,
-      `= v·t (changing it adjusts ${V.stretch === 't' ? 't' : 'v'})`,
+    return (
+      M.inl('= v t') +
+      L(
+        ` (al cambiarlo se ajusta ${V.stretch === 't' ? 't' : 'v'})`,
+        ` (changing it adjusts ${V.stretch === 't' ? 't' : 'v'})`,
+      )
     );
   if (q === 'd' && V.kind === 'acc')
-    return L(
-      `= v₀t + ½at² (al cambiarlo se ajusta ${V.stretch === 't' ? 't' : 'a'})`,
-      `= v₀t + ½at² (changing it adjusts ${V.stretch === 't' ? 't' : 'a'})`,
+    return (
+      M.inl(`= v₀ t + ${M.half} a t${M.sup(2)}`) +
+      L(
+        ` (al cambiarlo se ajusta ${V.stretch === 't' ? 't' : 'a'})`,
+        ` (changing it adjusts ${V.stretch === 't' ? 't' : 'a'})`,
+      )
     );
   if (q === 'x' || q === 'y') return L('al cambiarlo se ajustan |V| y θ', 'changing it adjusts |V| and θ');
   return '';

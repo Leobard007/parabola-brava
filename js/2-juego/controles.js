@@ -97,17 +97,50 @@ function syncUI() {
   if (!S.def) return;
   const th = theory(P.v0, P.ang, P.h0, g);
   const practice = $('practice').checked;
-  let h = `
-    <div><span class="k">vₓ</span> = v₀·cos θ = ${f(P.v0, 1)}·cos ${P.ang}° = <b>${f(th.vx)} m/s</b></div>
-    <div><span class="k">vᵧ₀</span> = v₀·sin θ = ${f(P.v0, 1)}·sin ${P.ang}° = <b>${f(th.vy)} m/s</b></div>
-    <div><span class="k">x(t)</span> = ${f(th.vx)}·t</div>
-    <div><span class="k">y(t)</span> = ${f(P.h0, 1)} ${th.vy < 0 ? '−' : '+'} ${f(Math.abs(th.vy))}·t − ${f(g / 2, 3)}·t²</div>
-    <div><span class="k">vᵧ(t)</span> = ${f(th.vy)} − ${f(g)}·t</div>`;
+  // Ecuaciones con formato de cuaderno (ver js/1-nucleo/ecuaciones.js): fórmula, sustitución y resultado
+  const k = (t) => `<span class="k">${t}</span>`,
+    d = M.dot,
+    t2 = `t${M.sup(2)}`;
+  const vyS = M.sum([th.vy]),
+    signVy = th.vy < 0 ? '−' : '+';
+  let h =
+    M.eq(k('vₓ'), 'v₀ cos θ', `${f(P.v0, 1)} ${d} cos ${P.ang}°`, M.res(f(th.vx), 'm/s')) +
+    M.eq(k('vᵧ₀'), 'v₀ sin θ', `${f(P.v0, 1)} ${d} sin ${P.ang}°`, M.res(vyS, 'm/s')) +
+    M.eq(k('x(t)'), 'vₓ t', `${f(th.vx)} t`) +
+    M.eq(
+      k('y(t)'),
+      `h₀ + vᵧ₀ t − ${M.half} g ${t2}`,
+      `${f(P.h0, 1)} ${signVy} ${f(Math.abs(th.vy))} t − ${M.half} ${d} ${f(g)} ${t2}`,
+      `${f(P.h0, 1)} ${signVy} ${f(Math.abs(th.vy))} t − ${f(g / 2, 3)} ${t2}`,
+    ) +
+    M.eq(k('vᵧ(t)'), 'vᵧ₀ − g t', `${vyS} − ${f(g)} t`);
   if (practice) {
-    h += `<div class="pred">
-      <div>${L('h máx', 'max h')} = h₀ + vᵧ₀²/(2g) = <b>${f(th.hmax)} m</b>${th.vy > 0 ? ` (t = ${f(th.tApex)} s)` : ''}</div>
-      <div>${L('t vuelo', 'flight t')} (y = 0) = <b>${f(th.tf)} s</b></div>
-      <div>${L('Alcance', 'Range')} (y = 0) = vₓ·t = <b>${f(th.range)} m</b></div></div>`;
+    h +=
+      `<div class="pred">` +
+      (th.vy > 0
+        ? M.eq(
+            k(L('h máx', 'max h')),
+            `h₀ + ${M.frac(`vᵧ₀${M.sup(2)}`, '2g')}`,
+            `${f(P.h0, 1)} + ${M.frac(M.sq(th.vy), `2 ${d} ${f(g)}`)}`,
+            M.res(f(th.hmax), 'm'),
+          ) +
+          M.eq(
+            k(L('t subida', 'rise t')),
+            M.frac('vᵧ₀', 'g'),
+            M.frac(f(th.vy), f(g)),
+            M.res(f(th.tApex), 's'),
+          )
+        : M.eq(k(L('h máx', 'max h')), 'h₀', M.res(f(th.hmax), 'm')) +
+          `<div class="mnote">${L('(no sube porque vᵧ₀ ≤ 0)', '(it doesn’t rise because vᵧ₀ ≤ 0)')}</div>`) +
+      `<div class="mnote">${L('Cuando vuelve al suelo (y = 0):', 'When it returns to the ground (y = 0):')}</div>` +
+      M.eq(
+        k(L('t vuelo', 'flight t')),
+        M.frac(`vᵧ₀ + ${M.sqrt(`vᵧ₀${M.sup(2)} + 2 g h₀`)}`, 'g'),
+        M.frac(`${M.n(th.vy)} + ${M.sqrt(`${M.sq(th.vy)} + 2 ${d} ${f(g)} ${d} ${f(P.h0, 1)}`)}`, f(g)),
+        M.res(f(th.tf), 's'),
+      ) +
+      M.eq(k(L('Alcance', 'Range')), 'vₓ t', `${f(th.vx)} ${d} ${f(th.tf)}`, M.res(f(th.range), 'm')) +
+      `</div>`;
   } else {
     h += `<div class="note">${L(
       'Calcula tú el alcance y la altura máxima, o activa el modo práctica para verlos (ese nivel no dará estrellas).',

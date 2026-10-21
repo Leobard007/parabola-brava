@@ -19,7 +19,7 @@ const $ = (id) => document.getElementById(id);
 // Número de versión del juego. Lo escribe automáticamente el script de empaquetado (archivo VERSION)
 // y debe coincidir con version.json, que es lo que se consulta para saber si hay una versión nueva.
 // Número de versión del juego (se muestra en Configuración).
-const APP_VERSION = 8;
+const APP_VERSION = 9;
 
 // cv = el <canvas> donde se dibuja la escena del juego; ctx = su "pincel" 2D (se usa para dibujar líneas, rectángulos, texto...).
 const cv = $('cv'),
