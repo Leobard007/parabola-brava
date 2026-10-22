@@ -1,57 +1,64 @@
-/* ==================================================================
-   ARCHIVO: css/online.css
+/* ======================================================================
+   FILE: css/online.css
 
-   MODO ONLINE: menú Online, sala de espera, código de partida, tarjetas de jugadores,
-   ventana "Seleccionar juego", tabla de posiciones, podio, cuenta regresiva y avisos.
-   ================================================================== */
+   ONLINE MODE: the Online menu, join screen, lobby, game code box,
+   player cards, level picker, rules, leaderboard, podium, duels,
+   countdown and pop-up notices ("toasts").
+   ====================================================================== */
 
-/* ---- online ---- */
-.mbtn.online {
-  border-color: var(--gold);
-  color: var(--gold);
+/* ----------------------------------------------------------------------
+   ONLINE MENU ON THE HOME SCREEN
+   ---------------------------------------------------------------------- */
+.menu-button-online {
+  border-color: var(--color-gold);
+  color: var(--color-gold);
 }
-.mbtn.online:hover {
+.menu-button-online:hover {
   background: rgba(255, 209, 102, 0.14);
 }
-.onmenu {
+.online-menu {
   gap: 8px;
   padding: 10px;
 }
-.onopt {
+.online-option {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 2px;
   text-align: left;
-  border: 2px solid var(--ink);
+  border: 2px solid var(--color-ink);
   background: #fff;
-  color: var(--ink);
+  color: var(--color-ink);
   border-radius: 8px;
   padding: 9px 12px;
   cursor: pointer;
   font: inherit;
 }
-.onopt:hover {
-  background: var(--inc-bg);
+.online-option:hover {
+  background: var(--color-unknown-background);
 }
-.onopt b {
-  font: 400 20px var(--f-display);
+.online-option b {
+  font: 400 20px var(--font-title);
 }
-.onopt small {
+.online-option small {
   font-size: 12px;
-  color: var(--ink-soft);
+  color: var(--color-ink-soft);
 }
-.onWrap {
+
+/* ----------------------------------------------------------------------
+   ONLINE SCREENS: cards, header, game code
+   ---------------------------------------------------------------------- */
+.online-wrapper {
   width: min(1120px, 100%);
   display: flex;
   flex-direction: column;
   gap: 14px;
   text-align: left;
 }
-.onCard {
-  background: var(--panel);
-  color: var(--ink);
-  border: 2px solid var(--ink);
+.online-card {
+  background: var(--color-panel);
+  color: var(--color-ink);
+  border: 2px solid var(--color-ink);
   border-radius: 12px;
   padding: 16px 18px;
   display: flex;
@@ -60,119 +67,125 @@
   box-shadow: 0 5px 0 rgba(0, 0, 0, 0.35);
   min-width: 0;
 }
-.onCard.narrow {
+.online-card.online-card-narrow {
   width: min(460px, 100%);
   align-self: center;
 }
-.onCard h2 {
+.online-card h2 {
   margin: 0;
-  font: 400 32px var(--f-display);
+  font: 400 32px var(--font-title);
   line-height: 1.05;
 }
-.onCard h3 {
+.online-card h3 {
   margin: 0;
-  font: 400 22px var(--f-display);
+  font: 400 22px var(--font-title);
 }
-.onCard p {
+.online-card p {
   margin: 0;
 }
-.onHead {
+.online-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
   flex-wrap: wrap;
 }
-.onHead h2 {
-  font: 400 clamp(26px, 4.5vw, 40px) var(--f-display);
+.online-header h2 {
+  font: 400 clamp(26px, 4.5vw, 40px) var(--font-title);
   margin: 0;
   color: #fff;
   flex: 1 1 auto;
 }
-.codeBox {
+/* Gold box with the 5-character game code */
+.code-box {
   display: flex;
   align-items: center;
   gap: 10px;
-  border: 2px solid var(--gold);
+  border: 2px solid var(--color-gold);
   border-radius: 10px;
   padding: 6px 8px 6px 12px;
   background: rgba(16, 33, 61, 0.8);
-  color: var(--gold);
+  color: var(--color-gold);
 }
-.codeBox small {
-  font: 600 10px var(--f-body);
+.code-box small {
+  font: 600 10px var(--font-body);
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--bp-soft);
+  color: var(--color-blueprint-soft);
   display: block;
 }
-.codeBox b {
-  font: 600 30px var(--f-mono);
+.code-box b {
+  font: 600 30px var(--font-numbers);
   letter-spacing: 0.12em;
   line-height: 1;
 }
-.codeBox .btn {
-  background: var(--gold);
-  border-color: var(--gold);
-  color: var(--bp);
+.code-box .button {
+  background: var(--color-gold);
+  border-color: var(--color-gold);
+  color: var(--color-blueprint);
 }
-.codeInput {
-  font: 600 26px var(--f-mono) !important;
+.code-input {
+  font: 600 26px var(--font-numbers) !important;
   letter-spacing: 0.3em;
   text-transform: uppercase;
   text-align: center;
 }
-.onCard input[type='text'] {
-  font: 500 17px var(--f-body);
+.online-card input[type='text'] {
+  font: 500 17px var(--font-body);
   padding: 9px 11px;
-  border: 2px solid var(--ink);
+  border: 2px solid var(--color-ink);
   border-radius: 8px;
   background: #fff;
-  color: var(--ink);
+  color: var(--color-ink);
   width: 100%;
 }
-.btn.big {
+.button-big {
   font-size: 17px;
   padding: 11px 18px;
 }
-.btn.go {
-  background: var(--pencil);
-  border-color: var(--pencil-deep);
+.button-go {
+  background: var(--color-accent);
+  border-color: var(--color-accent-dark);
   color: #fff;
   font-size: 18px;
   padding: 12px 18px;
-  box-shadow: 0 4px 0 var(--pencil-deep);
+  box-shadow: 0 4px 0 var(--color-accent-dark);
 }
-.btn.go:active:not(:disabled) {
+.button-go:active:not(:disabled) {
   transform: translateY(3px);
-  box-shadow: 0 1px 0 var(--pencil-deep);
+  box-shadow: 0 1px 0 var(--color-accent-dark);
 }
-.onMsg {
+.online-message {
   min-height: 1.3em;
   font-size: 14px;
 }
-.onMsg.bad {
-  color: var(--pencil-deep);
+.online-message.online-message-error {
+  color: var(--color-accent-dark);
   font-weight: 600;
 }
-.onGrid {
+/* Two columns on wide screens, one column on narrow screens */
+.online-grid {
   display: grid;
   grid-template-columns: minmax(0, 1.7fr) minmax(280px, 1fr);
   gap: 14px;
   align-items: start;
 }
 @media (max-width: 820px) {
-  .onGrid {
+  .online-grid {
     grid-template-columns: 1fr;
   }
 }
-.pList {
+
+/* ----------------------------------------------------------------------
+   PLAYER CARDS IN THE HOST PANEL
+   ---------------------------------------------------------------------- */
+.player-card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
   gap: 10px;
 }
-.pCard {
-  border: 2px solid var(--ink);
+.player-card {
+  border: 2px solid var(--color-ink);
   background: #fff;
   border-radius: 10px;
   padding: 10px 12px;
@@ -181,104 +194,107 @@
   gap: 6px;
   text-align: left;
   font: inherit;
-  color: var(--ink);
+  color: var(--color-ink);
   cursor: pointer;
   min-width: 0;
   position: relative;
 }
-.pCard:hover {
-  background: var(--inc-bg);
+.player-card:hover {
+  background: var(--color-unknown-background);
 }
-.pCard.off {
+.player-card.player-card-offline {
   opacity: 0.55;
   border-style: dashed;
 }
-.pCard .pTop {
+.player-card .player-card-top {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
   gap: 8px;
 }
-.pCard .pName {
+.player-card .player-name {
   font-weight: 700;
   font-size: 16px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.pCard .pScore {
-  font: 600 18px var(--f-mono);
-  color: var(--pencil-deep);
+.player-card .player-score {
+  font: 600 18px var(--font-numbers);
+  color: var(--color-accent-dark);
 }
-.pCard .pMeta {
+.player-card .player-meta {
   display: flex;
   gap: 6px;
   flex-wrap: wrap;
   align-items: center;
   font-size: 12px;
-  color: var(--ink-soft);
+  color: var(--color-ink-soft);
 }
-.pCard .rank {
-  font: 400 18px var(--f-display);
-  color: var(--ink-soft);
+.player-card .player-rank {
+  font: 400 18px var(--font-title);
+  color: var(--color-ink-soft);
   margin-right: 4px;
 }
-.chipS {
-  font: 600 11px var(--f-body);
+/* Small rounded status label: waiting / playing / finished / disconnected */
+.status-chip {
+  font: 600 11px var(--font-body);
   border-radius: 999px;
   padding: 2px 8px;
   border: 1.5px solid currentColor;
   white-space: nowrap;
 }
-.chipS.wait {
-  color: var(--ink-soft);
+.status-chip.status-chip-waiting {
+  color: var(--color-ink-soft);
 }
-.chipS.play {
-  color: var(--vector);
-  background: var(--inc-bg);
+.status-chip.status-chip-playing {
+  color: var(--color-vector);
+  background: var(--color-unknown-background);
 }
-.chipS.done {
-  color: var(--target-dark);
-  background: var(--ok-bg);
+.status-chip.status-chip-done {
+  color: var(--color-target-dark);
+  background: var(--color-correct-background);
 }
-.chipS.gone {
-  color: var(--pencil-deep);
+.status-chip.status-chip-gone {
+  color: var(--color-accent-dark);
 }
-.segs {
+/* Progress bar with one segment per level */
+.progress-segments {
   display: flex;
   gap: 3px;
 }
-.segs i {
+.progress-segments i {
   flex: 1;
   height: 7px;
   border-radius: 3px;
   background: #e2e8ef;
   border: 1px solid #c9d3df;
 }
-.segs i.p {
-  background: var(--inc-bg);
-  border-color: var(--vector);
+.progress-segments i.segment-playing {
+  background: var(--color-unknown-background);
+  border-color: var(--color-vector);
 }
-.segs i.w {
-  background: var(--target);
-  border-color: var(--target-dark);
+.progress-segments i.segment-won {
+  background: var(--color-target);
+  border-color: var(--color-target-dark);
 }
-.segs i.f {
+.progress-segments i.segment-failed {
   background: #f2c2bb;
-  border-color: var(--pencil-deep);
+  border-color: var(--color-accent-dark);
 }
-.segs i.t {
+.progress-segments i.segment-timeout {
   background: #f7dd9a;
   border-color: #a87a10;
 }
-.nameChips {
+/* Names of the players in the lobby */
+.name-chips {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
 }
-.nameChips span {
+.name-chips span {
   background: #fff;
-  border: 2px solid var(--ink);
+  border: 2px solid var(--color-ink);
   border-radius: 999px;
   padding: 4px 10px 4px 12px;
   font-weight: 600;
@@ -287,27 +303,28 @@
   align-items: center;
   gap: 6px;
 }
-.nameChips span.me {
-  border-color: var(--pencil);
-  color: var(--pencil-deep);
+.name-chips span.name-chip-me {
+  border-color: var(--color-accent);
+  color: var(--color-accent-dark);
 }
-.nameChips button {
+.name-chips button {
   border: 0;
   background: transparent;
-  color: var(--pencil-deep);
-  font: 700 15px var(--f-body);
+  color: var(--color-accent-dark);
+  font: 700 15px var(--font-body);
   cursor: pointer;
   padding: 0 2px;
   line-height: 1;
 }
-.empty {
-  border: 2px dashed var(--line);
+.empty-box {
+  border: 2px dashed var(--color-line);
   border-radius: 10px;
   padding: 18px;
   text-align: center;
-  color: var(--ink-soft);
+  color: var(--color-ink-soft);
 }
-.sumList {
+/* Summary of the rules (list with "·" bullets) */
+.summary-list {
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -316,43 +333,44 @@
   padding: 0;
   list-style: none;
 }
-.sumList li {
+.summary-list li {
   display: flex;
   gap: 6px;
 }
-.sumList li::before {
+.summary-list li::before {
   content: '·';
-  color: var(--ink-soft);
+  color: var(--color-ink-soft);
 }
-.lvChips {
+.level-chips {
   display: flex;
   flex-wrap: wrap;
   gap: 5px;
 }
-.lvChips span {
-  font: 600 12px var(--f-body);
-  border: 1.5px solid var(--ink);
+.level-chips span {
+  font: 600 12px var(--font-body);
+  border: 1.5px solid var(--color-ink);
   border-radius: 6px;
   padding: 2px 7px;
   background: #fff;
 }
-.lvChips span.c {
-  border-color: var(--pencil-deep);
-  color: var(--pencil-deep);
+.level-chips span.chip-launch {
+  border-color: var(--color-accent-dark);
+  color: var(--color-accent-dark);
 }
-.lvChips span.d {
-  border-color: var(--vector);
-  color: var(--vector);
+.level-chips span.chip-displacement {
+  border-color: var(--color-vector);
+  color: var(--color-vector);
 }
-.lvChips span.m {
-  border-color: var(--mixed);
-  color: var(--mixed);
+.level-chips span.chip-mixed {
+  border-color: var(--color-mixed);
+  color: var(--color-mixed);
 }
-.waitDots::after {
+/* Animated "..." after a text that is waiting for something */
+.waiting-dots::after {
   content: '';
-  animation: dots 1.4s steps(4) infinite;
+  animation: waiting-dots-animation 1.4s steps(4) infinite;
 }
-@keyframes dots {
+@keyframes waiting-dots-animation {
   0% {
     content: '';
   }
@@ -366,91 +384,20 @@
     content: '...';
   }
 }
-.modalCard.wide {
+.modal-card.modal-card-wide {
   max-width: 860px;
 }
-.ogTabs {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-}
-.ogTabs button {
-  font: 600 13px var(--f-body);
-  border: 2px solid var(--ink);
-  background: #fff;
-  color: var(--ink);
-  border-radius: 7px;
-  padding: 6px 11px;
-  cursor: pointer;
-}
-.ogTabs button[aria-selected='true'] {
-  background: var(--ink);
-  color: var(--paper);
-}
-.ogList {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-  gap: 6px;
-  max-height: 240px;
-  overflow: auto;
-  padding: 2px;
-}
-.ogItem {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  border: 1.5px solid var(--line);
-  border-radius: 8px;
-  padding: 7px 9px;
-  background: #fff;
-  cursor: pointer;
-  font-size: 13px;
-}
-.ogItem:has(input:checked) {
-  border-color: var(--ink);
-  background: var(--inc-bg);
-}
-.ogItem input {
-  accent-color: var(--pencil);
-  width: 16px;
-  height: 16px;
-  flex: none;
-}
-.ogItem b {
-  font: 400 17px var(--f-display);
-  min-width: 26px;
-}
-.ogOrder {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-  align-items: center;
-  min-height: 30px;
-}
-.ogOrder span {
-  font: 600 12px var(--f-body);
-  border: 1.5px solid var(--ink);
-  border-radius: 6px;
-  padding: 2px 4px 2px 8px;
-  background: #fff;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-}
-.ogOrder span button {
-  border: 0;
-  background: transparent;
-  cursor: pointer;
-  color: var(--pencil-deep);
-  font-weight: 700;
-}
-.rules {
+
+/* ----------------------------------------------------------------------
+   GAME RULES SCREEN
+   ---------------------------------------------------------------------- */
+.rule-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 12px;
 }
-.rule {
-  border: 1.5px solid var(--line);
+.rule-box {
+  border: 1.5px solid var(--color-line);
   border-radius: 9px;
   padding: 9px 11px;
   background: #fff;
@@ -458,99 +405,108 @@
   flex-direction: column;
   gap: 6px;
 }
-.rule > b {
+.rule-box > b {
   font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--ink-soft);
+  color: var(--color-ink-soft);
 }
-.rule label {
+.rule-box label {
   display: flex;
   gap: 7px;
   align-items: center;
   font-size: 14px;
   cursor: pointer;
 }
-.rule input[type='radio'],
-.rule input[type='checkbox'] {
-  accent-color: var(--pencil);
+.rule-box input[type='radio'],
+.rule-box input[type='checkbox'] {
+  accent-color: var(--color-accent);
   width: 16px;
   height: 16px;
 }
-.rule select {
+.rule-box select {
   width: auto;
   min-width: 120px;
   padding: 3px 6px;
   font: inherit;
-  border: 1.5px solid var(--ink);
+  border: 1.5px solid var(--color-ink);
   border-radius: 6px;
 }
-.rule input[type='number'] {
+.rule-box input[type='number'] {
   width: 76px;
   padding: 3px 6px;
   font: inherit;
-  border: 1.5px solid var(--ink);
+  border: 1.5px solid var(--color-ink);
   border-radius: 6px;
 }
-.onChip {
-  font: 600 12px var(--f-mono);
-  background: var(--ink);
-  color: var(--paper);
+
+/* ----------------------------------------------------------------------
+   WHILE PLAYING ONLINE: status chip, leaderboard
+   ---------------------------------------------------------------------- */
+.online-status-chip {
+  font: 600 12px var(--font-numbers);
+  background: var(--color-ink);
+  color: var(--color-paper);
   border-radius: 6px;
   padding: 3px 8px;
 }
-.onChip.warn {
-  background: var(--pencil);
+.online-status-chip.online-status-chip-warning {
+  background: var(--color-accent);
 }
-.onBoard {
+.leaderboard-panel {
   position: absolute;
   right: 0;
   top: 52px;
   z-index: 30;
   width: min(300px, 92vw);
-  background: var(--panel);
-  border: 2px solid var(--ink);
+  background: var(--color-panel);
+  border: 2px solid var(--color-ink);
   border-radius: 10px;
   padding: 10px 12px;
   box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.25);
 }
-.board {
+/* Numbered list: CSS counters write 1, 2, 3... before each name */
+.leaderboard-list {
   margin: 0;
   padding: 0;
   list-style: none;
   display: flex;
   flex-direction: column;
   gap: 3px;
-  counter-reset: r;
+  counter-reset: rank-counter;
 }
-.board li {
+.leaderboard-list li {
   display: flex;
   justify-content: space-between;
   gap: 8px;
   font-size: 14px;
   padding: 3px 6px;
   border-radius: 5px;
-  counter-increment: r;
+  counter-increment: rank-counter;
 }
-.board li::before {
-  content: counter(r);
-  font: 400 16px var(--f-display);
-  color: var(--ink-soft);
+.leaderboard-list li::before {
+  content: counter(rank-counter);
+  font: 400 16px var(--font-title);
+  color: var(--color-ink-soft);
   width: 20px;
 }
-.board li span {
+.leaderboard-list li span {
   flex: 1;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.board li b {
-  font-family: var(--f-mono);
+.leaderboard-list li b {
+  font-family: var(--font-numbers);
 }
-.board li.me {
-  background: var(--inc-bg);
+.leaderboard-list li.leaderboard-me {
+  background: var(--color-unknown-background);
   font-weight: 700;
 }
+
+/* ----------------------------------------------------------------------
+   PODIUM AND RESULTS
+   ---------------------------------------------------------------------- */
 .podium {
   display: flex;
   justify-content: center;
@@ -565,7 +521,7 @@
   gap: 4px;
   width: min(150px, 30%);
 }
-.podium .nm {
+.podium .podium-name {
   font-weight: 700;
   text-align: center;
   overflow: hidden;
@@ -573,91 +529,96 @@
   max-width: 100%;
   white-space: nowrap;
 }
-.podium .sc {
-  font: 600 14px var(--f-mono);
-  color: var(--ink-soft);
+.podium .podium-score {
+  font: 600 14px var(--font-numbers);
+  color: var(--color-ink-soft);
 }
-.podium .blk {
+.podium .podium-block {
   width: 100%;
-  border: 2px solid var(--ink);
+  border: 2px solid var(--color-ink);
   border-radius: 8px 8px 0 0;
   display: grid;
   place-items: center;
-  font: 400 34px var(--f-display);
+  font: 400 34px var(--font-title);
   color: #fff;
 }
-.podium .p1 .blk {
+.podium .podium-first .podium-block {
   height: 110px;
-  background: #e0a915;
+  background: #e0a915; /* gold */
 }
-.podium .p2 .blk {
+.podium .podium-second .podium-block {
   height: 80px;
-  background: #9aa3b2;
+  background: #9aa3b2; /* silver */
 }
-.podium .p3 .blk {
+.podium .podium-third .podium-block {
   height: 60px;
-  background: #b87333;
+  background: #b87333; /* bronze */
 }
-.rTable {
+.results-table {
   width: 100%;
   border-collapse: collapse;
   font-size: 13px;
 }
-.rTable th,
-.rTable td {
-  border-bottom: 1px solid var(--line);
+.results-table th,
+.results-table td {
+  border-bottom: 1px solid var(--color-line);
   padding: 5px 6px;
   text-align: left;
   vertical-align: top;
 }
-.rTable th {
+.results-table th {
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--ink-soft);
+  color: var(--color-ink-soft);
 }
-.rTable .nr {
-  font-family: var(--f-mono);
+.results-table .number-cell {
+  font-family: var(--font-numbers);
   text-align: right;
 }
-.tableWrap {
+.table-wrapper {
   overflow-x: auto;
 }
-.evLog {
+/* List of answers and shots of one player */
+.event-log {
   display: flex;
   flex-direction: column;
   gap: 6px;
   max-height: 300px;
   overflow: auto;
 }
-.ev {
-  border-left: 3px solid var(--line);
+.event {
+  border-left: 3px solid var(--color-line);
   padding: 3px 8px;
   font-size: 13px;
   background: #fff;
   border-radius: 0 6px 6px 0;
 }
-.ev.ok {
-  border-color: var(--target-dark);
+.event.event-correct {
+  border-color: var(--color-target-dark);
 }
-.ev.bad {
-  border-color: var(--pencil-deep);
+.event.event-wrong {
+  border-color: var(--color-accent-dark);
 }
-.ev.shot {
-  border-color: var(--vector);
+.event.event-shot {
+  border-color: var(--color-vector);
 }
-.ev .ok {
-  color: var(--target-dark);
+.event .text-correct {
+  color: var(--color-target-dark);
   font-weight: 600;
 }
-.ev .bad {
-  color: var(--pencil-deep);
+.event .text-wrong {
+  color: var(--color-accent-dark);
   font-weight: 600;
 }
-.ev small {
-  color: var(--ink-soft);
+.event small {
+  color: var(--color-ink-soft);
 }
-.countdown {
+
+/* ----------------------------------------------------------------------
+   COUNTDOWN (3-2-1-Go!) AND NOTICES
+   ---------------------------------------------------------------------- */
+.countdown-overlay {
   position: fixed;
   inset: 0;
   z-index: 80;
@@ -665,13 +626,13 @@
   display: grid;
   place-items: center;
 }
-.countdown span {
-  font: 400 clamp(90px, 22vw, 200px) var(--f-display);
+.countdown-overlay span {
+  font: 400 clamp(90px, 22vw, 200px) var(--font-title);
   color: #fff;
   text-shadow: 0 8px 0 rgba(0, 0, 0, 0.35);
-  animation: pop 0.8s ease-out;
+  animation: countdown-pop 0.8s ease-out;
 }
-@keyframes pop {
+@keyframes countdown-pop {
   0% {
     transform: scale(1.6);
     opacity: 0;
@@ -685,7 +646,8 @@
     opacity: 0.9;
   }
 }
-.toasts {
+/* "Toasts": small notices at the bottom of the screen that disappear by themselves */
+.toast-area {
   position: fixed;
   left: 50%;
   transform: translateX(-50%);
@@ -699,122 +661,126 @@
   width: min(420px, 92vw);
 }
 .toast {
-  background: var(--ink);
-  color: var(--paper);
+  background: var(--color-ink);
+  color: var(--color-paper);
   border-radius: 8px;
   padding: 8px 14px;
   font-size: 14px;
   font-weight: 600;
   box-shadow: 0 4px 0 rgba(0, 0, 0, 0.3);
-  animation: tin 0.25s ease-out;
+  animation: toast-slide-in 0.25s ease-out;
 }
-@keyframes tin {
+@keyframes toast-slide-in {
   from {
     transform: translateY(10px);
     opacity: 0;
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .countdown span,
+  .countdown-overlay span,
   .toast,
-  .waitDots::after {
+  .waiting-dots::after {
     animation: none;
   }
 }
 
-/* ---- selector de niveles (pantalla completa) ---- */
-.pkSec {
+/* ----------------------------------------------------------------------
+   LEVEL PICKER (full screen list of levels)
+   ---------------------------------------------------------------------- */
+.picker-section {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
-.pkHead {
+.picker-section-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  border-bottom: 1.5px solid var(--line);
+  border-bottom: 1.5px solid var(--color-line);
   padding-bottom: 4px;
 }
-.pkHead h3.c {
-  color: var(--pencil-deep);
+.picker-section-header h3.section-title-launch {
+  color: var(--color-accent-dark);
 }
-.pkHead h3.d {
-  color: var(--vector);
+.picker-section-header h3.section-title-displacement {
+  color: var(--color-vector);
 }
-.pkHead h3.m {
-  color: var(--mixed);
+.picker-section-header h3.section-title-mixed {
+  color: var(--color-mixed);
 }
-.pkGrid {
+.picker-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
   gap: 8px;
 }
-.pkCard {
+.picker-card {
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 2px;
   text-align: left;
-  border: 2px solid var(--line);
+  border: 2px solid var(--color-line);
   background: #fff;
   border-radius: 10px;
   padding: 10px 12px 10px 12px;
   cursor: pointer;
   font: inherit;
-  color: var(--ink);
+  color: var(--color-ink);
   min-height: 68px;
 }
-.pkCard:hover {
-  border-color: var(--ink);
+.picker-card:hover {
+  border-color: var(--color-ink);
 }
-.pkCard b {
-  font: 400 22px var(--f-display);
+.picker-card b {
+  font: 400 22px var(--font-title);
   line-height: 1;
 }
-.pkCard.c b {
-  color: var(--pencil-deep);
+.picker-card.picker-card-launch b {
+  color: var(--color-accent-dark);
 }
-.pkCard.d b {
-  color: var(--vector);
+.picker-card.picker-card-displacement b {
+  color: var(--color-vector);
 }
-.pkCard.m b {
-  color: var(--mixed);
+.picker-card.picker-card-mixed b {
+  color: var(--color-mixed);
 }
-.pkCard .pkName {
+.picker-card .picker-level-name {
   font-size: 13px;
   font-weight: 600;
   padding-right: 26px;
 }
-.pkCard small {
-  color: var(--pencil);
+.picker-card small {
+  color: var(--color-accent);
   font-size: 11px;
   letter-spacing: 0.1em;
 }
-.pkCard[aria-pressed='true'] {
-  border-color: var(--ink);
-  background: var(--inc-bg);
-  box-shadow: 0 3px 0 var(--ink);
+.picker-card[aria-pressed='true'] {
+  border-color: var(--color-ink);
+  background: var(--color-unknown-background);
+  box-shadow: 0 3px 0 var(--color-ink);
 }
-.pkNum {
+/* Circle in the corner with the play order (1, 2, 3...) */
+.picker-order-number {
   position: absolute;
   top: 8px;
   right: 8px;
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  border: 2px solid var(--line);
+  border: 2px solid var(--color-line);
   display: grid;
   place-items: center;
-  font: 600 12px var(--f-mono);
+  font: 600 12px var(--font-numbers);
   color: #fff;
 }
-.pkCard[aria-pressed='true'] .pkNum {
-  background: var(--pencil);
-  border-color: var(--pencil-deep);
+.picker-card[aria-pressed='true'] .picker-order-number {
+  background: var(--color-accent);
+  border-color: var(--color-accent-dark);
 }
-.pkBar {
+/* Bar that stays at the bottom of the screen with the "Continue" button */
+.picker-bottom-bar {
   position: sticky;
   bottom: 10px;
   z-index: 5;
@@ -823,28 +789,31 @@
   justify-content: space-between;
   gap: 10px;
   flex-wrap: wrap;
-  background: var(--panel);
-  color: var(--ink);
-  border: 2px solid var(--ink);
+  background: var(--color-panel);
+  color: var(--color-ink);
+  border: 2px solid var(--color-ink);
   border-radius: 12px;
   padding: 10px 14px;
   box-shadow: 0 5px 0 rgba(0, 0, 0, 0.35);
 }
-.pkBtns {
+.picker-buttons {
   display: flex;
   gap: 8px;
   align-items: center;
 }
-/* ---- duelos ---- */
-.vsRow {
+
+/* ----------------------------------------------------------------------
+   DUELS (1 vs 1)
+   ---------------------------------------------------------------------- */
+.versus-row {
   display: flex;
   align-items: center;
   gap: 10px;
   flex-wrap: wrap;
 }
-.vsName {
+.versus-name {
   flex: 1 1 120px;
-  border: 2px solid var(--ink);
+  border: 2px solid var(--color-ink);
   background: #fff;
   border-radius: 10px;
   padding: 10px 12px;
@@ -855,131 +824,129 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.vsName.me {
-  border-color: var(--pencil);
-  color: var(--pencil-deep);
+.versus-name.versus-name-me {
+  border-color: var(--color-accent);
+  color: var(--color-accent-dark);
 }
-.vsName.wait {
+.versus-name.versus-name-waiting {
   border-style: dashed;
-  color: var(--ink-soft);
+  color: var(--color-ink-soft);
   font-weight: 500;
 }
-.vs {
-  font: 400 26px var(--f-display);
-  color: var(--pencil);
+.versus-label {
+  font: 400 26px var(--font-title);
+  color: var(--color-accent);
 }
-.kickX {
+.remove-player-button {
   border: 0;
   background: transparent;
-  color: var(--pencil-deep);
-  font: 700 16px var(--f-body);
+  color: var(--color-accent-dark);
+  font: 700 16px var(--font-body);
   cursor: pointer;
   margin-left: 4px;
 }
-.duModes {
+.duel-mode-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 8px;
 }
 @media (max-width: 520px) {
-  .duModes {
+  .duel-mode-grid {
     grid-template-columns: 1fr;
   }
 }
-.duMode {
+.duel-mode-button {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 3px;
   text-align: left;
-  border: 2px solid var(--line);
+  border: 2px solid var(--color-line);
   background: #fff;
   border-radius: 10px;
   padding: 10px 12px;
   cursor: pointer;
   font: inherit;
-  color: var(--ink);
+  color: var(--color-ink);
 }
-.duMode b {
-  font: 400 21px var(--f-display);
+.duel-mode-button b {
+  font: 400 21px var(--font-title);
 }
-.duMode small {
+.duel-mode-button small {
   font-size: 12px;
-  color: var(--ink-soft);
+  color: var(--color-ink-soft);
 }
-.duMode[aria-pressed='true'] {
-  border-color: var(--ink);
-  background: var(--inc-bg);
-  box-shadow: 0 3px 0 var(--ink);
+.duel-mode-button[aria-pressed='true'] {
+  border-color: var(--color-ink);
+  background: var(--color-unknown-background);
+  box-shadow: 0 3px 0 var(--color-ink);
 }
-.seg2.light button {
+.segmented-buttons.segmented-buttons-small button {
   font-size: 13px;
 }
-.hideMap {
+/* The map where each player hides their piglet */
+.hide-map {
   width: 100%;
   display: block;
-  border: 2px solid var(--ink);
+  border: 2px solid var(--color-ink);
   border-radius: 8px;
   cursor: crosshair;
   touch-action: manipulation;
 }
-.hdRow {
+.hide-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
   flex-wrap: wrap;
 }
-.mono {
-  font-family: var(--f-mono);
+.hide-inputs {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
 }
-.vrow {
-  padding: 4px 0;
-  border-bottom: 1px dashed var(--line);
+.hide-inputs label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font: 600 13px var(--font-numbers);
 }
-.rivalBar {
+.hide-inputs input {
+  width: 80px;
+  padding: 6px 8px;
+  border: 2px solid var(--color-ink);
+  border-radius: 7px;
+  font: inherit;
+}
+.monospace {
+  font-family: var(--font-numbers);
+}
+/* Dark bar above the scene that shows what the rival is doing */
+.rival-status-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 8px 16px;
   flex-wrap: wrap;
-  background: var(--ink);
-  color: var(--paper);
+  background: var(--color-ink);
+  color: var(--color-paper);
   border-radius: 9px;
   padding: 7px 12px;
   font-size: 14px;
 }
-.rivalBar b {
-  color: var(--gold);
+.rival-status-bar b {
+  color: var(--color-gold);
 }
-.rivalBar .bad {
+.rival-status-bar .rival-disconnected {
   color: #ffb3a8;
   font-weight: 600;
 }
-.rivalBar .score2 {
-  font: 600 13px var(--f-mono);
+.rival-status-bar .rival-score {
+  font: 600 13px var(--font-numbers);
 }
-.duEnd h2 {
+.duel-end h2 {
   text-align: center;
 }
-.duEnd h2.win {
-  color: var(--pencil);
-}
-.hdInputs {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-.hdInputs label {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font: 600 13px var(--f-mono);
-}
-.hdInputs input {
-  width: 80px;
-  padding: 6px 8px;
-  border: 2px solid var(--ink);
-  border-radius: 7px;
-  font: inherit;
+.duel-end h2.duel-end-win {
+  color: var(--color-accent);
 }

@@ -1,26 +1,29 @@
-/* ==================================================================
-   ARCHIVO: css/editor.css
+/* ======================================================================
+   FILE: css/editor.css
 
-   EDITOR DE NIVELES: pestañas, herramientas, tablas de variables, panel de variables
-   del problema, plantillas y tarjeta flotante.
-   ================================================================== */
+   LEVEL EDITOR: level type tabs, tool bar, templates, tables of variables,
+   the "Problem variables" panel and the floating property card.
+   ====================================================================== */
 
-/* ---- editor ---- */
 .editor {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
-.tabs {
+
+/* ----------------------------------------------------------------------
+   LEVEL TYPE TABS (Launch / Displacement / Mixed)
+   ---------------------------------------------------------------------- */
+.editor-tabs {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
 }
-.tab {
-  font: 600 14px var(--f-body);
-  border: 2px solid var(--ink);
-  background: var(--panel);
-  color: var(--ink);
+.editor-tab {
+  font: 600 14px var(--font-body);
+  border: 2px solid var(--color-ink);
+  background: var(--color-panel);
+  color: var(--color-ink);
   border-radius: 8px;
   padding: 8px 14px;
   cursor: pointer;
@@ -31,40 +34,44 @@
   text-align: left;
   flex: 1 1 220px;
 }
-.tab small {
-  font: 500 12px var(--f-body);
-  color: var(--ink-soft);
+.editor-tab small {
+  font: 500 12px var(--font-body);
+  color: var(--color-ink-soft);
 }
-.tab[aria-selected='true'] {
-  background: var(--ink);
-  color: var(--paper);
+.editor-tab[aria-selected='true'] {
+  background: var(--color-ink);
+  color: var(--color-paper);
 }
-.tab[aria-selected='true'] small {
-  color: var(--grid);
+.editor-tab[aria-selected='true'] small {
+  color: var(--color-grid);
 }
-.tab.d[aria-selected='true'] {
-  background: var(--vector);
-  border-color: var(--vector);
+.editor-tab-displacement[aria-selected='true'] {
+  background: var(--color-vector);
+  border-color: var(--color-vector);
 }
-.tab.m[aria-selected='true'] {
-  background: var(--mixed);
-  border-color: var(--mixed);
+.editor-tab-mixed[aria-selected='true'] {
+  background: var(--color-mixed);
+  border-color: var(--color-mixed);
 }
-.toolbar {
+
+/* ----------------------------------------------------------------------
+   TOOL BAR (Move, Point A, Wood, Stone, Target, Terrain, Erase...)
+   ---------------------------------------------------------------------- */
+.editor-toolbar {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
   align-items: center;
-  background: var(--panel);
-  border: 1.5px solid var(--line);
+  background: var(--color-panel);
+  border: 1.5px solid var(--color-line);
   border-radius: 8px;
   padding: 8px;
 }
-.tool {
-  font: 600 13px var(--f-body);
-  border: 1.5px solid var(--ink);
+.editor-tool {
+  font: 600 13px var(--font-body);
+  border: 1.5px solid var(--color-ink);
   background: #fff;
-  color: var(--ink);
+  color: var(--color-ink);
   border-radius: 6px;
   padding: 6px 11px;
   cursor: pointer;
@@ -72,214 +79,224 @@
   gap: 7px;
   align-items: center;
 }
-.tool i {
+/* The small colored square inside each tool button */
+.editor-tool i {
   width: 12px;
   height: 12px;
   border-radius: 2px;
-  border: 1.5px solid var(--ink);
+  border: 1.5px solid var(--color-ink);
   display: inline-block;
 }
-.tool[data-tool='wood'] i {
-  background: var(--wood);
-  border-color: var(--wood-dark);
+.editor-tool[data-tool='wood'] i {
+  background: var(--color-wood);
+  border-color: var(--color-wood-dark);
 }
-.tool[data-tool='stone'] i {
-  background: var(--stone);
-  border-color: var(--stone-dark);
+.editor-tool[data-tool='stone'] i {
+  background: var(--color-stone);
+  border-color: var(--color-stone-dark);
 }
-.tool[data-tool='target'] i {
-  background: var(--target);
-  border-color: var(--target-dark);
+.editor-tool[data-tool='target'] i {
+  background: var(--color-target);
+  border-color: var(--color-target-dark);
   border-radius: 50%;
 }
-.tool[data-tool='terrain'] i {
-  background: var(--earth);
-  border-color: var(--earth-dark);
+.editor-tool[data-tool='terrain'] i {
+  background: var(--color-earth);
+  border-color: var(--color-earth-dark);
 }
-.tool[data-tool='select'] i {
+.editor-tool[data-tool='select'] i {
   border-style: dashed;
 }
-.tool[data-tool='start'] i {
-  background: var(--vector);
-  border-color: var(--vector);
+.editor-tool[data-tool='start'] i {
+  background: var(--color-vector);
+  border-color: var(--color-vector);
   border-radius: 50%;
 }
-.tool[data-tool='erase'] i {
-  border-color: var(--pencil);
-  background: linear-gradient(45deg, transparent 45%, var(--pencil) 45%, var(--pencil) 55%, transparent 55%);
+.editor-tool[data-tool='erase'] i {
+  border-color: var(--color-accent);
+  background: linear-gradient(45deg, transparent 45%, var(--color-accent) 45%, var(--color-accent) 55%, transparent 55%);
 }
-.tool[aria-pressed='true'] {
-  background: var(--ink);
-  color: var(--paper);
+.editor-tool[aria-pressed='true'] {
+  background: var(--color-ink);
+  color: var(--color-paper);
 }
-.toolHint {
+.editor-tool-hint {
   font-size: 13px;
-  color: var(--ink-soft);
+  color: var(--color-ink-soft);
   flex: 1 1 220px;
   min-width: 0;
   padding-left: 4px;
 }
-.toolbar .sep {
+.editor-toolbar .toolbar-separator {
   width: 1px;
   height: 26px;
-  background: var(--line);
+  background: var(--color-line);
   margin: 0 2px;
 }
-.edGrid {
+
+/* ----------------------------------------------------------------------
+   PANEL LAYOUT AND FORM FIELDS
+   ---------------------------------------------------------------------- */
+.editor-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
   gap: 10px;
 }
-.edGrid .wide {
-  grid-column: 1/-1;
+.editor-grid .panel-wide {
+  grid-column: 1 / -1; /* this panel takes the whole width */
 }
-.fields {
+.form-fields {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
   gap: 8px;
 }
-.field {
+.form-field {
   display: flex;
   flex-direction: column;
   gap: 3px;
   min-width: 0;
 }
-.field > span {
+.form-field > span {
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--ink-soft);
+  color: var(--color-ink-soft);
   font-weight: 600;
 }
-.field input,
-.field select {
+.form-field input,
+.form-field select {
   width: 100%;
 }
-.field.full {
-  grid-column: 1/-1;
+.form-field.form-field-full {
+  grid-column: 1 / -1;
 }
-.checks {
+.checkbox-row {
   display: flex;
   flex-wrap: wrap;
   gap: 6px 20px;
 }
-.tablewrap {
-  overflow-x: auto;
+
+/* ----------------------------------------------------------------------
+   TABLES (launch variables, advanced vector table, visibility matrix)
+   ---------------------------------------------------------------------- */
+.table-wrapper {
+  overflow-x: auto; /* wide tables can be scrolled sideways on small screens */
 }
-table.vars {
+table.data-table {
   border-collapse: collapse;
   width: 100%;
   min-width: 560px;
   font-variant-numeric: tabular-nums;
 }
-.vars th,
-.vars td {
+.data-table th,
+.data-table td {
   padding: 5px 6px;
   text-align: left;
-  border-bottom: 1px dotted var(--line);
+  border-bottom: 1px dotted var(--color-line);
   vertical-align: middle;
 }
-.vars thead th {
+.data-table thead th {
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--ink-soft);
+  color: var(--color-ink-soft);
   font-weight: 600;
 }
-.vars tbody th {
+.data-table tbody th {
   font-weight: 600;
   font-size: 14px;
   white-space: nowrap;
 }
-.vars tbody th small {
+.data-table tbody th small {
   display: block;
-  font: 12px var(--f-mono);
-  color: var(--ink-soft);
+  font: 12px var(--font-numbers);
+  color: var(--color-ink-soft);
   font-weight: 400;
 }
-.vars input[type='number'] {
+.data-table input[type='number'] {
   width: 6em;
 }
-.vars tr.locked td.rng input {
+.data-table tr.row-locked td.range-cell input {
   opacity: 0.5;
 }
-.minis {
+.mini-fields {
   display: flex;
   flex-wrap: wrap;
   gap: 6px 10px;
 }
-.mini {
+.mini-field {
   display: flex;
   align-items: center;
   gap: 4px;
-  font: 500 13px var(--f-mono);
+  font: 500 13px var(--font-numbers);
   white-space: nowrap;
 }
-.mini input {
+.mini-field input {
   width: 5.2em;
 }
-.mini em {
+.mini-field em {
   font-style: normal;
-  color: var(--ink-soft);
+  color: var(--color-ink-soft);
   font-size: 12px;
 }
-table.matrix {
+table.matrix-table {
   min-width: 760px;
 }
-.matrix td {
+.matrix-table td {
   text-align: center;
 }
-.matrix td.na {
-  color: var(--line);
+.matrix-table td.not-applicable {
+  color: var(--color-line);
 }
-.matrix select {
-  font: 600 13px var(--f-body);
+.matrix-table select {
+  font: 600 13px var(--font-body);
   padding: 2px 4px;
   width: 100%;
   min-width: 4.6em;
 }
-.matrix select.st-dato {
-  background: var(--ok-bg);
-  border-color: var(--target-dark);
-  color: var(--target-dark);
+.matrix-table select.select-given {
+  background: var(--color-correct-background);
+  border-color: var(--color-target-dark);
+  color: var(--color-target-dark);
 }
-.matrix select.st-inc {
-  background: var(--inc-bg);
-  border-color: var(--vector);
-  color: var(--vector);
+.matrix-table select.select-unknown {
+  background: var(--color-unknown-background);
+  border-color: var(--color-vector);
+  color: var(--color-vector);
 }
-.matrix select.st-oculto {
-  color: var(--ink-soft);
-  border-color: var(--line);
+.matrix-table select.select-hidden {
+  color: var(--color-ink-soft);
+  border-color: var(--color-line);
 }
-.matrix small {
+.matrix-table small {
   display: block;
-  font: 11px var(--f-mono);
-  color: var(--ink-soft);
+  font: 11px var(--font-numbers);
+  color: var(--color-ink-soft);
   margin-top: 2px;
   white-space: nowrap;
 }
+/* Legend that explains Given / ? / — */
 .legend {
   display: flex;
   flex-wrap: wrap;
   gap: 6px 14px;
   font-size: 12px;
-  color: var(--ink-soft);
+  color: var(--color-ink-soft);
 }
 .legend b {
   font-weight: 600;
   border-radius: 4px;
   padding: 0 5px;
 }
-.legend .ld {
-  background: var(--ok-bg);
-  color: var(--target-dark);
+.legend .legend-given {
+  background: var(--color-correct-background);
+  color: var(--color-target-dark);
 }
-.legend .li {
-  background: var(--inc-bg);
-  color: var(--vector);
+.legend .legend-unknown {
+  background: var(--color-unknown-background);
+  color: var(--color-vector);
 }
-.btnrow {
+.button-row {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
@@ -292,51 +309,57 @@ textarea {
   resize: vertical;
   word-break: break-all;
 }
-.msg {
+/* Message line of the editor (green = ok, red = error) */
+.editor-message {
   font-size: 13px;
   min-height: 1.3em;
-  color: var(--ink-soft);
+  color: var(--color-ink-soft);
 }
-.msg.ok {
-  color: var(--target-dark);
+.editor-message.message-ok {
+  color: var(--color-target-dark);
 }
-.msg.err {
-  color: var(--pencil-deep);
+.editor-message.message-error {
+  color: var(--color-accent-dark);
 }
-.counts {
+.piece-counts {
   display: flex;
   gap: 6px 14px;
   flex-wrap: wrap;
   font-size: 13px;
-  color: var(--ink-soft);
+  color: var(--color-ink-soft);
   font-variant-numeric: tabular-nums;
 }
-.counts b {
-  color: var(--ink);
+.piece-counts b {
+  color: var(--color-ink);
 }
-.status {
+/* Box that says if the problem can be solved */
+.puzzle-status {
   border-radius: 7px;
   padding: 8px 10px;
   font-size: 13px;
-  border: 1.5px dashed var(--vector);
-  background: color-mix(in srgb, var(--vector) 8%, var(--panel));
+  border: 1.5px dashed var(--color-vector);
+  background: color-mix(in srgb, var(--color-vector) 8%, var(--color-panel));
 }
-.status.bad {
-  border-color: var(--pencil-deep);
-  background: color-mix(in srgb, var(--pencil) 8%, var(--panel));
-  color: var(--pencil-deep);
+.puzzle-status.puzzle-status-problem {
+  border-color: var(--color-accent-dark);
+  background: color-mix(in srgb, var(--color-accent) 8%, var(--color-panel));
+  color: var(--color-accent-dark);
 }
-.status b {
-  font-family: var(--f-mono);
+.puzzle-status b {
+  font-family: var(--font-numbers);
 }
-.status .btn {
+.puzzle-status .button {
   margin-left: 6px;
   vertical-align: middle;
 }
-.stageWrap {
+
+/* ----------------------------------------------------------------------
+   FLOATING PROPERTY CARD (appears when you select something in the scene)
+   ---------------------------------------------------------------------- */
+.stage-wrapper {
   position: relative;
 }
-.popcard {
+.property-card {
   position: absolute;
   z-index: 20;
   left: 16px;
@@ -345,47 +368,49 @@ textarea {
   max-width: calc(100% - 16px);
   max-height: min(470px, 78vh);
   overflow: auto;
-  background: var(--panel);
-  border: 2px solid var(--ink);
+  background: var(--color-panel);
+  border: 2px solid var(--color-ink);
   border-radius: 10px;
-  box-shadow: 5px 5px 0 var(--ink);
+  box-shadow: 5px 5px 0 var(--color-ink);
   padding: 10px 12px;
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
-.popcard.vec {
-  border-color: var(--vector);
-  box-shadow: 5px 5px 0 var(--vector);
+.property-card.property-card-vector {
+  border-color: var(--color-vector);
+  box-shadow: 5px 5px 0 var(--color-vector);
 }
-.popcard.r {
-  border-color: var(--pencil-deep);
-  box-shadow: 5px 5px 0 var(--pencil-deep);
+.property-card.property-card-resultant {
+  border-color: var(--color-accent-dark);
+  box-shadow: 5px 5px 0 var(--color-accent-dark);
 }
-.pophead {
+.property-card-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
 }
-.pophead b {
-  font: 400 22px var(--f-display);
+.property-card-header b {
+  font: 400 22px var(--font-title);
 }
-.popclose {
+/* The "×" close button of cards and windows */
+.close-button {
   border: 0;
   background: none;
   font-size: 22px;
   cursor: pointer;
-  color: var(--ink-soft);
+  color: var(--color-ink-soft);
   line-height: 1;
   padding: 2px 6px;
   border-radius: 5px;
 }
-.popclose:hover {
-  background: var(--grid);
+.close-button:hover {
+  background: var(--color-grid);
 }
+/* On phones the card goes below the scene instead of floating over it */
 @media (max-width: 640px) {
-  .popcard {
+  .property-card {
     position: static;
     width: auto;
     max-width: none;
@@ -394,25 +419,29 @@ textarea {
     box-shadow: none;
   }
 }
-.smartHead {
+
+/* ----------------------------------------------------------------------
+   "PROBLEM VARIABLES" PANEL: one card per vector and one for R
+   ---------------------------------------------------------------------- */
+.panel-header {
   display: flex;
   flex-wrap: wrap;
   gap: 8px 16px;
   align-items: center;
   justify-content: space-between;
 }
-.svgrid {
+.variable-card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
   gap: 10px;
 }
 @media (max-width: 420px) {
-  .svgrid {
+  .variable-card-grid {
     grid-template-columns: 1fr;
   }
 }
-.svcard {
-  border: 1.5px solid var(--line);
+.variable-card {
+  border: 1.5px solid var(--color-line);
   border-radius: 8px;
   background: #fff;
   padding: 6px 10px;
@@ -420,146 +449,152 @@ textarea {
   flex-direction: column;
   min-width: 0;
 }
-.svcard.sel {
-  border-color: var(--vector);
-  box-shadow: 0 0 0 3px var(--inc-bg);
+.variable-card.variable-card-selected {
+  border-color: var(--color-vector);
+  box-shadow: 0 0 0 3px var(--color-unknown-background);
 }
-.svcard.r {
-  border-left: 4px solid var(--pencil-deep);
+.variable-card.variable-card-resultant {
+  border-left: 4px solid var(--color-accent-dark);
 }
-.svcard h5 {
+.variable-card h5 {
   margin: 2px 0 4px;
   display: flex;
   flex-wrap: wrap;
   gap: 4px 8px;
   align-items: baseline;
-  font: 600 15px var(--f-body);
+  font: 600 15px var(--font-body);
   cursor: pointer;
 }
-.svcard h5 small {
+.variable-card h5 small {
   font-weight: 500;
-  color: var(--ink-soft);
+  color: var(--color-ink-soft);
   font-size: 12px;
 }
 .badge {
-  font: 600 10px var(--f-body);
+  font: 600 10px var(--font-body);
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  background: var(--mixed);
+  background: var(--color-mixed);
   color: #fff;
   border-radius: 4px;
   padding: 1px 6px;
 }
-.sv-row {
+/* One row: name | value | Given ? — buttons, and a note below */
+.variable-row {
   display: grid;
   grid-template-columns: 5.6em minmax(0, 1fr) auto;
   gap: 2px 8px;
   align-items: center;
   padding: 4px 0;
-  border-top: 1px dotted var(--line);
+  border-top: 1px dotted var(--color-line);
 }
-.svcard h5 + .sv-row {
+.variable-card h5 + .variable-row {
   border-top: 0;
 }
-.sv-name {
-  font: 600 13px var(--f-mono);
+.variable-name {
+  font: 600 13px var(--font-numbers);
   white-space: nowrap;
 }
-.sv-name small {
+.variable-name small {
   font-weight: 400;
-  color: var(--ink-soft);
+  color: var(--color-ink-soft);
   font-size: 11px;
 }
-.sv-row.st-inc .sv-name {
-  color: var(--vector);
+.variable-row.variable-row-unknown .variable-name {
+  color: var(--color-vector);
 }
-.sv-val {
+.variable-value {
   min-width: 0;
 }
-.sv-val input {
+.variable-value input {
   width: 100%;
   font-size: 14px;
   padding: 2px 5px;
 }
-.sv-val select {
+.variable-value select {
   width: 100%;
   font-size: 13px;
   padding: 2px 4px;
 }
-.sv-val .fixed {
-  font: 12px var(--f-mono);
-  color: var(--ink-soft);
+.variable-value .variable-fixed {
+  font: 12px var(--font-numbers);
+  color: var(--color-ink-soft);
 }
-.seg {
+/* The three buttons Given / ? / — */
+.visibility-buttons {
   display: inline-flex;
-  border: 1.5px solid var(--ink);
+  border: 1.5px solid var(--color-ink);
   border-radius: 6px;
   overflow: hidden;
 }
-.seg button {
-  font: 600 12px var(--f-body);
+.visibility-buttons button {
+  font: 600 12px var(--font-body);
   border: 0;
   background: #fff;
-  color: var(--ink-soft);
+  color: var(--color-ink-soft);
   padding: 3px 8px;
   cursor: pointer;
-  border-left: 1px solid var(--line);
+  border-left: 1px solid var(--color-line);
   min-width: 2.2em;
 }
-.seg button:first-child {
+.visibility-buttons button:first-child {
   border-left: 0;
 }
-.seg button[aria-pressed='true'].s-dato {
-  background: var(--ok-bg);
-  color: var(--target-dark);
+.visibility-buttons button[aria-pressed='true'].visibility-given {
+  background: var(--color-correct-background);
+  color: var(--color-target-dark);
 }
-.seg button[aria-pressed='true'].s-inc {
-  background: var(--vector);
+.visibility-buttons button[aria-pressed='true'].visibility-unknown {
+  background: var(--color-vector);
   color: #fff;
 }
-.seg button[aria-pressed='true'].s-oculto {
-  background: var(--grid);
-  color: var(--ink);
+.visibility-buttons button[aria-pressed='true'].visibility-hidden {
+  background: var(--color-grid);
+  color: var(--color-ink);
 }
-.seg button:disabled {
+.visibility-buttons button:disabled {
   opacity: 0.3;
   cursor: not-allowed;
 }
-.sv-note {
-  grid-column: 2/-1;
+.variable-note {
+  grid-column: 2 / -1;
   font-size: 11.5px;
-  color: var(--ink-soft);
+  color: var(--color-ink-soft);
   line-height: 1.3;
 }
-.sv-note.good {
-  color: var(--target-dark);
+.variable-note.note-good {
+  color: var(--color-target-dark);
 }
-.sv-note.bad {
-  color: var(--pencil-deep);
+.variable-note.note-bad {
+  color: var(--color-accent-dark);
   font-weight: 600;
 }
-.tplgroup {
+
+/* ----------------------------------------------------------------------
+   TEMPLATES
+   ---------------------------------------------------------------------- */
+.template-group {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
-.tplgroup .glabel {
+.template-group .template-group-label {
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: var(--ink-soft);
+  color: var(--color-ink-soft);
   font-weight: 600;
 }
-.tpls {
+.template-buttons {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
 }
-.tpl {
-  font: 600 13px var(--f-body);
-  border: 1.5px solid var(--vector);
+.template-button {
+  font: 600 13px var(--font-body);
+  border: 1.5px solid var(--color-vector);
   background: #fff;
-  color: var(--vector);
+  color: var(--color-vector);
   border-radius: 7px;
   padding: 6px 10px;
   cursor: pointer;
@@ -569,41 +604,43 @@ textarea {
   gap: 1px;
   max-width: 240px;
 }
-.tpl small {
-  font: 500 11.5px var(--f-body);
-  color: var(--ink-soft);
+.template-button small {
+  font: 500 11.5px var(--font-body);
+  color: var(--color-ink-soft);
 }
-.tpl.par {
-  border-color: var(--pencil-deep);
-  color: var(--pencil-deep);
+.template-button.template-button-launch {
+  border-color: var(--color-accent-dark);
+  color: var(--color-accent-dark);
 }
-.tpl.mix {
-  border-color: var(--mixed);
-  color: var(--mixed);
+.template-button.template-button-mixed {
+  border-color: var(--color-mixed);
+  color: var(--color-mixed);
 }
-.tpl:hover {
-  background: var(--inc-bg);
+.template-button:hover {
+  background: var(--color-unknown-background);
 }
-.tpl.par:hover {
+.template-button.template-button-launch:hover {
   background: #f8e3df;
 }
-.tpl.mix:hover {
+.template-button.template-button-mixed:hover {
   background: #ece2f6;
 }
-details.adv {
-  border-top: 1px dashed var(--line);
+/* "Advanced view" box that opens and closes */
+details.advanced-details {
+  border-top: 1px dashed var(--color-line);
   padding-top: 8px;
 }
-details.adv summary {
+details.advanced-details summary {
   cursor: pointer;
   font-weight: 600;
   font-size: 13px;
-  color: var(--ink-soft);
+  color: var(--color-ink-soft);
 }
+/* If the system asks for less motion, turn off the small button animations */
 @media (prefers-reduced-motion: reduce) {
-  .fire,
-  .mbtn,
-  .mode {
+  .launch-button,
+  .menu-button,
+  .mode-card {
     transition: none;
   }
 }

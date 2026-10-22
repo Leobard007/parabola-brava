@@ -1,88 +1,102 @@
-/* ==================================================================
-   ARCHIVO: css/base.css
+/* ======================================================================
+   FILE: css/base.css
 
-   BASE: COLORES, TIPOGRAFÍAS Y ESTILOS GENERALES
-   Aquí están las "variables CSS" (las que empiezan con --) que definen los colores y fuentes
-   de TODO el juego. Cambia un valor aquí y cambia en todas partes, incluso en la escena del
-   canvas (el JavaScript lee estos colores al iniciar).
-     --bg      fondo de la página del juego      --panel  fondo de los paneles
-     --ink     color del texto y bordes          --pencil rojo de los botones y acentos
-     --vector  azul de los vectores              --mixed  morado del modo mixto
-     --wood / --stone / --target  colores de madera, piedra y cochinito
-     --bp...   colores del plano azul de los menús   --gold dorado de los menús
-   ================================================================== */
+   BASE STYLES: colors, fonts and rules shared by the whole game.
 
-/* Paleta y tipografías. Cambia aquí los colores y fuentes de todo el juego. */
+   The "CSS variables" (names that start with --) below define every color and
+   font of the game. Change one value here and it changes everywhere, even in the
+   drawing on the canvas, because the JavaScript reads these colors when the game
+   starts (see COLORS in js/1-core/utilities.js).
+   ====================================================================== */
+
+/* ----------------------------------------------------------------------
+   COLOR AND FONT VARIABLES
+   :root means "the whole page", so these variables can be used anywhere
+   with var(--name).
+   ---------------------------------------------------------------------- */
 :root {
-  --bg: #d9e4dc; /* fondo de la página del juego */
-  --panel: #f4f8f3; /* fondo de paneles y tarjetas */
-  --paper: #edf4ee; /* papel de la escena */
-  --grid: #d3e3d6; /* líneas finas de la cuadrícula */
-  --grid-major: #a9c8b2; /* líneas gruesas de la cuadrícula */
-  --ink: #1c2a48; /* texto principal y bordes */
-  --ink-soft: #56657f; /* texto secundario */
-  --line: #b8cdbe; /* bordes suaves */
-  --pencil: #d4483b; /* rojo de acento (botones, lanzador) */
-  --pencil-deep: #a5302a; /* rojo oscuro */
-  --vector: #2f5fb3; /* azul de los vectores */
-  --mixed: #7a4bb0; /* morado del modo mixto */
-  --wood: #d1934f; /* madera */
-  --wood-dark: #8f5a26; /* borde de la madera */
-  --stone: #9aa3b2; /* piedra */
-  --stone-dark: #5f6878; /* borde de la piedra */
-  --target: #93c23e; /* cochinito (verde) */
-  --target-dark: #4f7a17; /* borde del cochinito */
-  --earth: #86705a; /* tierra del suelo */
-  --earth-dark: #5b4836; /* borde de la tierra */
-  --ok-bg: #e2efd6; /* fondo verde claro (correcto) */
-  --inc-bg: #dce6f7; /* fondo azul claro (incógnita) */
-  --bp: #10213d; /* azul del plano de los menús */
-  --bp-line: #a8c2ee; /* líneas del plano */
-  --bp-text: #e8f0ff; /* texto sobre el plano */
-  --bp-soft: #b3c6e6; /* texto suave sobre el plano */
-  --gold: #ffd166; /* dorado (código online, selección) */
-  --f-display: 'Lilita One', 'Trebuchet MS', sans-serif; /* fuente de títulos */
-  --f-body: 'IBM Plex Sans', system-ui, -apple-system, sans-serif; /* fuente del texto */
-  --f-mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace; /* fuente de números */
-  --f-hand: 'Kalam', 'Comic Sans MS', cursive; /* fuente "a mano" de la escena */
+  --color-page-background: #d9e4dc; /* background of the game page */
+  --color-panel: #f4f8f3; /* background of panels and cards */
+  --color-paper: #edf4ee; /* "graph paper" of the game scene */
+  --color-grid: #d3e3d6; /* thin grid lines */
+  --color-grid-major: #a9c8b2; /* thick grid lines (every 5 or 10 m) */
+  --color-ink: #1c2a48; /* main text and borders */
+  --color-ink-soft: #56657f; /* secondary text */
+  --color-line: #b8cdbe; /* soft borders */
+  --color-accent: #d4483b; /* red accent: buttons, launcher */
+  --color-accent-dark: #a5302a; /* darker red */
+  --color-vector: #2f5fb3; /* blue used for vectors */
+  --color-mixed: #7a4bb0; /* purple used for the mixed mode */
+  --color-wood: #d1934f; /* wood blocks */
+  --color-wood-dark: #8f5a26; /* border of wood blocks */
+  --color-stone: #9aa3b2; /* stone blocks */
+  --color-stone-dark: #5f6878; /* border of stone blocks */
+  --color-target: #93c23e; /* the piglet (green) */
+  --color-target-dark: #4f7a17; /* border of the piglet */
+  --color-earth: #86705a; /* ground and terrain */
+  --color-earth-dark: #5b4836; /* border of the ground */
+  --color-correct-background: #e2efd6; /* light green: correct / given value */
+  --color-unknown-background: #dce6f7; /* light blue: unknown value / selected */
+  --color-blueprint: #10213d; /* dark blue of the menu "blueprint" */
+  --color-blueprint-line: #a8c2ee; /* lines of the blueprint */
+  --color-blueprint-text: #e8f0ff; /* text on top of the blueprint */
+  --color-blueprint-soft: #b3c6e6; /* soft text on top of the blueprint */
+  --color-gold: #ffd166; /* gold: online code, selected card */
+  --font-title: 'Lilita One', 'Trebuchet MS', sans-serif; /* big titles */
+  --font-body: 'IBM Plex Sans', system-ui, -apple-system, sans-serif; /* normal text */
+  --font-numbers: 'IBM Plex Mono', ui-monospace, Menlo, monospace; /* numbers (every digit has the same width) */
+  --font-handwriting: 'Kalam', 'Comic Sans MS', cursive; /* "hand written" labels in the scene */
   color-scheme: light;
 }
+
+/* ----------------------------------------------------------------------
+   GENERAL RULES
+   ---------------------------------------------------------------------- */
+/* Width and height include padding and border (makes sizes easier to reason about) */
 * {
   box-sizing: border-box;
 }
-/* Todo elemento con el atributo hidden queda oculto (el JavaScript lo quita para mostrarlo). */
+/* Any element with the "hidden" attribute is not shown.
+   The JavaScript shows or hides things by setting element.hidden = true / false. */
 [hidden] {
   display: none !important;
 }
 html,
 body {
-  background: var(--bg);
-  color: var(--ink);
+  background: var(--color-page-background);
+  color: var(--color-ink);
 }
 body {
-  font-family: var(--f-body);
+  font-family: var(--font-body);
   font-size: 15px;
   line-height: 1.45;
+  /* env(safe-area-inset-...) keeps content away from the notch of some phones */
   padding-left: max(16px, env(safe-area-inset-left, 0px));
   padding-right: max(16px, env(safe-area-inset-right, 0px));
   padding-block: 16px 28px;
 }
-body.menu {
-  background: var(--bp);
+/* While a menu is visible the JavaScript adds the class "showing-menu" to <body> */
+body.showing-menu {
+  background: var(--color-blueprint);
 }
+/* Outline shown when you move around with the keyboard (Tab key) */
 button:focus-visible,
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
-  outline: 3px solid var(--pencil);
+  outline: 3px solid var(--color-accent);
   outline-offset: 2px;
 }
-body.menu button:focus-visible {
-  outline-color: var(--gold);
+body.showing-menu button:focus-visible {
+  outline-color: var(--color-gold);
 }
 
-/* ---- ecuaciones con formato de cuaderno (las crea js/1-nucleo/ecuaciones.js) ---- */
-.meq {
+/* ----------------------------------------------------------------------
+   EQUATIONS WRITTEN LIKE IN A NOTEBOOK
+   These classes are created by js/1-core/equations.js.
+   ---------------------------------------------------------------------- */
+/* One equation: a grid with 3 columns (left side | = | right side) so every "=" lines up */
+.equation {
   display: inline-grid;
   grid-template-columns: auto auto auto;
   column-gap: 0.4em;
@@ -95,17 +109,18 @@ body.menu button:focus-visible {
   margin: 0.2em 0;
   white-space: nowrap;
 }
-.meq .ml {
+.equation .equation-left {
   justify-self: end;
 }
-.meq .mo {
+.equation .equation-equals {
   justify-self: center;
-  color: var(--ink-soft);
+  color: var(--color-ink-soft);
 }
-.meq .mr {
+.equation .equation-right {
   justify-self: start;
 }
-.mfrac {
+/* A fraction: the top part above a horizontal bar, the bottom part below it */
+.fraction {
   display: inline-flex;
   flex-direction: column;
   align-items: center;
@@ -114,39 +129,41 @@ body.menu button:focus-visible {
   line-height: 1.15;
   font-size: 0.95em;
 }
-.mnum {
+.fraction-top {
   padding: 0 0.25em 0.1em;
-  border-bottom: 1.4px solid currentColor;
+  border-bottom: 1.4px solid currentColor; /* this border is the fraction bar */
   text-align: center;
 }
-.mden {
+.fraction-bottom {
   padding: 0.1em 0.25em 0;
   text-align: center;
 }
-.msqrt {
+/* Square root: a small drawing of the root sign plus a bar over everything inside */
+.square-root {
   display: inline-flex;
   align-items: stretch;
   vertical-align: middle;
 }
-.mroot {
+.square-root-sign {
   width: 0.62em;
   align-self: stretch;
   height: auto;
   flex: none;
   overflow: visible;
 }
-.mroot path {
+.square-root-sign path {
   fill: none;
   stroke: currentColor;
   stroke-width: 1.4px;
-  vector-effect: non-scaling-stroke;
+  vector-effect: non-scaling-stroke; /* the line keeps the same thickness when the drawing stretches */
   stroke-linejoin: round;
 }
-.mrad {
-  border-top: 1.4px solid currentColor;
+.square-root-inside {
+  border-top: 1.4px solid currentColor; /* the bar over the numbers inside the root */
   padding: 0.14em 0.15em 0.02em 0.12em;
 }
-.mpar {
+/* Tall parentheses around a fraction */
+.tall-parenthesis {
   font-size: 1.9em;
   line-height: 1;
   vertical-align: middle;
@@ -154,40 +171,42 @@ body.menu button:focus-visible {
   display: inline-block;
   transform: translateY(-0.04em);
 }
-.msup {
+.exponent {
   font-size: 0.68em;
   vertical-align: 0.6em;
   line-height: 0;
 }
-.mdot {
+.multiply-dot {
   margin: 0 0.05em;
 }
-.mres {
+.equation-result {
   font-weight: 700;
 }
-.mi {
+/* Math inside a normal sentence */
+.inline-math {
   font-family: 'Cambria Math', 'STIX Two Math', 'Latin Modern Math', 'Cambria', 'Times New Roman', serif;
   font-size: 1.08em;
   white-space: nowrap;
 }
-.mi .mfrac {
+.inline-math .fraction {
   font-size: 0.85em;
 }
-.mnote {
-  font-family: var(--f-body);
+.equation-note {
+  font-family: var(--font-body);
   font-size: 12.5px;
-  color: var(--ink-soft);
+  color: var(--color-ink-soft);
   white-space: normal;
 }
-.mhead {
-  font-family: var(--f-body);
+.solution-heading {
+  font-family: var(--font-body);
   font-weight: 700;
   font-size: 13px;
   margin-top: 8px;
-  border-top: 1px dashed var(--line);
+  border-top: 1px dashed var(--color-line);
   padding-top: 6px;
 }
-.mpair {
+/* Two equations side by side (Δx and Δy of a vector) */
+.equation-pair {
   display: flex;
   flex-wrap: wrap;
   gap: 4px 28px;

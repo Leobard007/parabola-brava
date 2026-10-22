@@ -1,0 +1,583 @@
+/* ======================================================================
+   FILE: css/game.css
+
+   GAME SCREEN: top bar, the scene (canvas), the labels over the scene,
+   the end-of-level card, the launcher controls, the vector panels,
+   and general buttons and form fields (also used by the editor and online screens).
+   ====================================================================== */
+
+/* The whole game screen: a centered column */
+.game-screen {
+  position: relative;
+  z-index: 1;
+  max-width: 1180px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ----------------------------------------------------------------------
+   TOP BAR: menu button, game name, gravity, score
+   ---------------------------------------------------------------------- */
+.game-top-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 16px;
+  justify-content: space-between;
+}
+.game-top-bar .top-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 8px 14px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+.brand-small {
+  font: 400 26px var(--font-title);
+  line-height: 1;
+}
+.brand-small span {
+  color: var(--color-accent);
+}
+.top-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px 14px;
+  flex-wrap: wrap;
+}
+.score-box {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.score-box span {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-ink-soft);
+}
+.score-box b {
+  font: 600 24px var(--font-numbers);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+
+/* ----------------------------------------------------------------------
+   BUTTONS (used everywhere)
+   A button gets the class "button" plus optional extra classes:
+     button-outline (transparent), button-danger (red outline), button-small,
+     button-accent (red), button-vector (blue), button-big, button-go (big red)
+   ---------------------------------------------------------------------- */
+.button {
+  font: 600 14px var(--font-body);
+  border: 2px solid var(--color-ink);
+  background: var(--color-ink);
+  color: var(--color-paper);
+  border-radius: 7px;
+  padding: 8px 14px;
+  cursor: pointer;
+}
+.button-outline {
+  background: transparent;
+  color: var(--color-ink);
+}
+.button-danger {
+  background: transparent;
+  color: var(--color-accent-dark);
+  border-color: var(--color-accent-dark);
+}
+.button-small {
+  padding: 5px 10px;
+  font-size: 13px;
+}
+.button-accent {
+  background: var(--color-accent);
+  border-color: var(--color-accent-dark);
+  color: #fff;
+}
+.button-vector {
+  background: var(--color-vector);
+  border-color: var(--color-vector);
+  color: #fff;
+}
+.button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ----------------------------------------------------------------------
+   THE SCENE: canvas, labels on top (HUD) and the end-of-level card
+   ---------------------------------------------------------------------- */
+.stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9; /* wide rectangle on computers */
+  max-height: 72vh;
+  min-height: 240px;
+  border: 2px solid var(--color-ink);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--color-paper);
+}
+/* In the editor the scene gets a dashed red border */
+.stage.stage-editing {
+  border-style: dashed;
+  border-color: var(--color-accent-dark);
+}
+/* On narrow screens (phones) the scene is less wide */
+@media (max-width: 640px) {
+  .stage {
+    aspect-ratio: 4 / 3;
+  }
+}
+#gameCanvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: none; /* lets the editor use finger drags without scrolling the page */
+}
+/* HUD = small labels in the top-left corner of the scene */
+.hud {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  pointer-events: none;
+  max-width: calc(100% - 20px);
+}
+.hud span {
+  background: color-mix(in srgb, var(--color-panel) 88%, transparent);
+  border: 1.5px solid var(--color-ink);
+  border-radius: 5px;
+  padding: 3px 8px;
+  font: 600 12px var(--font-body);
+  font-variant-numeric: tabular-nums;
+}
+.hud span:empty {
+  display: none; /* labels with no text are not shown */
+}
+.hud .hud-shots {
+  letter-spacing: 0.15em;
+  color: var(--color-accent);
+}
+.hud .hud-mode-tag {
+  background: var(--color-accent);
+  color: #fff;
+  border-color: var(--color-accent-dark);
+}
+.hud .hud-phase-tag {
+  background: var(--color-vector);
+  color: #fff;
+  border-color: var(--color-vector);
+}
+/* Dark layer + card shown when a level ends */
+.level-end-overlay {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(28, 42, 72, 0.38);
+  padding: 16px;
+}
+.level-end-card {
+  background: var(--color-panel);
+  border: 2px solid var(--color-ink);
+  border-radius: 10px;
+  padding: 20px 24px;
+  text-align: center;
+  max-width: 390px;
+  box-shadow: 6px 6px 0 var(--color-ink);
+}
+.level-end-card h2 {
+  font-family: var(--font-title);
+  font-weight: 400;
+  font-size: 30px;
+  margin: 0 0 6px;
+}
+.stars {
+  font-size: 30px;
+  letter-spacing: 0.15em;
+  color: var(--color-accent);
+  min-height: 1.2em;
+}
+.stars .star-empty {
+  color: var(--color-line);
+}
+.level-end-card p {
+  margin: 8px 0 16px;
+  color: var(--color-ink-soft);
+}
+.level-end-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ----------------------------------------------------------------------
+   LAUNCHER CONTROLS: sliders, number boxes, gravity, launch button
+   ---------------------------------------------------------------------- */
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.launch-controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 10px;
+}
+.control-box {
+  background: var(--color-panel);
+  border: 1.5px solid var(--color-line);
+  border-radius: 8px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+.control-box label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-ink-soft);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.control-box label i {
+  font-family: var(--font-handwriting);
+  text-transform: none;
+  font-size: 16px;
+  letter-spacing: 0;
+  color: var(--color-ink);
+  font-style: normal;
+}
+/* "Fixed" badge shown when the level does not let you change a value */
+.lock-badge {
+  font: 600 10px var(--font-body);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: var(--color-ink);
+  color: var(--color-paper);
+  border-radius: 4px;
+  padding: 1px 6px;
+}
+.hint {
+  font-size: 12px;
+  color: var(--color-ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+.control-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.control-row input[type='range'] {
+  flex: 1;
+  min-width: 0;
+  accent-color: var(--color-accent);
+}
+/* A number box followed by its unit (m/s, °, m) */
+.number-with-unit {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+.number-with-unit input {
+  width: 4.6em;
+}
+/* Every text box, number box and drop-down list */
+input[type='number'],
+input[type='text'],
+select,
+textarea {
+  font: 500 15px var(--font-numbers);
+  font-variant-numeric: tabular-nums;
+  border: 1.5px solid var(--color-ink);
+  border-radius: 5px;
+  padding: 4px 6px;
+  background: #fff;
+  color: var(--color-ink);
+  min-width: 0;
+}
+select,
+input[type='text'] {
+  font-family: var(--font-body);
+}
+input:disabled,
+select:disabled {
+  background: var(--color-grid);
+  border-color: var(--color-line);
+  color: var(--color-ink-soft);
+}
+.number-with-unit em {
+  font-style: normal;
+  font: 13px var(--font-numbers);
+  color: var(--color-ink-soft);
+}
+/* A checkbox with its text next to it */
+.checkbox-label,
+.control-box label.checkbox-label {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 13px;
+  cursor: pointer;
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 500;
+  color: var(--color-ink);
+}
+.checkbox-label input {
+  accent-color: var(--color-accent);
+  width: 16px;
+  height: 16px;
+  flex: none;
+}
+/* The big red "Launch!" button */
+.launch-button {
+  font-family: var(--font-title);
+  font-size: 28px;
+  border: 2px solid var(--color-accent-dark);
+  background: var(--color-accent);
+  color: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 5px 0 var(--color-accent-dark);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  transition: transform 0.08s, box-shadow 0.08s;
+  min-height: 76px;
+}
+.launch-button small {
+  font: 500 11px var(--font-body);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+.launch-button:active:not(:disabled) {
+  transform: translateY(4px);
+  box-shadow: 0 1px 0 var(--color-accent-dark);
+}
+.launch-button:disabled {
+  filter: grayscale(0.6);
+  opacity: 0.6;
+  cursor: wait;
+}
+
+/* ----------------------------------------------------------------------
+   PANELS: equations, telemetry, known data, answers and solution
+   ---------------------------------------------------------------------- */
+.panel-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 10px;
+}
+.panel {
+  background: var(--color-panel);
+  border: 1.5px solid var(--color-line);
+  border-radius: 8px;
+  padding: 12px 14px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+/* Panels about vectors have a blue border */
+.panel.panel-vector {
+  border-color: var(--color-vector);
+  border-width: 2px;
+}
+.panel h3 {
+  margin: 0;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-ink-soft);
+}
+.panel h4 {
+  margin: 6px 0 0;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-vector);
+}
+.panel.panel-vector h3 {
+  color: var(--color-vector);
+}
+/* "Launch equations" panel */
+.launch-equations {
+  font-family: var(--font-numbers);
+  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow-x: auto;
+}
+.launch-equations div {
+  white-space: nowrap;
+}
+.launch-equations .equation-label {
+  color: var(--color-accent);
+  font-weight: 600;
+}
+.launch-equations .launch-note {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--color-ink-soft);
+  white-space: normal;
+  margin-top: 4px;
+}
+.launch-equations .practice-predictions {
+  border-top: 1px dashed var(--color-line);
+  padding-top: 6px;
+  margin-top: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+/* "Telemetry" panel: time, position and speed of the projectile */
+.telemetry {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 6px 14px;
+  font-variant-numeric: tabular-nums;
+}
+.telemetry div {
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px dotted var(--color-line);
+  padding-bottom: 3px;
+}
+.telemetry span {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-ink-soft);
+}
+.telemetry b {
+  font: 600 17px var(--font-numbers);
+}
+.telemetry .telemetry-message {
+  grid-column: 1 / -1;
+  border: 0;
+  font-size: 13px;
+  color: var(--color-ink-soft);
+  display: block;
+}
+/* "Known data" panel of the vector levels */
+.known-data p {
+  margin: 0 0 6px;
+  max-width: 68ch;
+}
+.vector-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 4px 0 8px;
+}
+/* One row of known data (one vector) */
+.vector-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  align-items: baseline;
+  font-family: var(--font-numbers);
+  font-size: 14px;
+  border-left: 3px solid var(--color-vector);
+  padding: 4px 0;
+  border-bottom: 1px dashed var(--color-line);
+}
+.vector-row.vector-row-resultant {
+  border-left-color: var(--color-accent-dark);
+}
+.vector-row b {
+  font-family: var(--font-body);
+  font-weight: 600;
+  min-width: 2.2em;
+}
+.vector-row em {
+  font-style: normal;
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--color-ink-soft);
+  width: 100%;
+}
+/* A value the player must find (shown as "= ?") */
+.unknown-value {
+  color: var(--color-vector);
+  font-weight: 600;
+  background: var(--color-unknown-background);
+  border-radius: 4px;
+  padding: 0 4px;
+}
+/* Messages after pressing "Check" */
+.answer-feedback {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 14px;
+  min-height: 1em;
+}
+.answer-feedback .feedback-correct {
+  color: var(--color-target-dark);
+  font-weight: 600;
+}
+.answer-feedback .feedback-wrong {
+  color: var(--color-accent-dark);
+  font-weight: 600;
+}
+/* Step by step solution */
+.solution {
+  font-family: var(--font-numbers);
+  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow-x: auto;
+}
+.solution div {
+  white-space: nowrap;
+}
+.solution .equation-label {
+  color: var(--color-vector);
+  font-weight: 600;
+}
+.solution .solution-result {
+  font-family: var(--font-body);
+  white-space: normal;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.solution .solution-subtitle {
+  font-family: var(--font-body);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-ink-soft);
+  margin-top: 6px;
+}
+.solution .solution-next {
+  font-family: var(--font-body);
+  white-space: normal;
+  color: var(--color-ink-soft);
+  margin-top: 6px;
+}
+.solution .solution-answer {
+  background: var(--color-unknown-background);
+  border-radius: 5px;
+  padding: 2px 6px;
+}

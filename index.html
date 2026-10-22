@@ -1,18 +1,25 @@
 <!doctype html>
 <!--
-  ====================================================================
+  ======================================================================
   PARÁBOLA BRAVA · index.html
-  Este archivo contiene solo la ESTRUCTURA de la página (qué elementos existen).
-    - El aspecto (colores, tamaños, posiciones) está en la carpeta css/
-    - El comportamiento (física, menús, editor, online) está en la carpeta js/
-  Lee LEEME.txt para una guía completa del proyecto.
 
-  Tres detalles que verás mucho:
-    - id="algo"        → nombre único que usa el JavaScript para encontrar el elemento: $('algo')
-    - data-l="es|en"   → texto traducible: el JavaScript pone la parte en español o en inglés
-                         según el idioma elegido (por eso muchos elementos parecen vacíos aquí).
-    - hidden           → el elemento empieza oculto; el JavaScript lo muestra cuando hace falta.
-  ====================================================================
+  This file only contains the STRUCTURE of the page (which elements exist).
+    - How things look (colors, sizes, positions) is in the css/ folder.
+    - How things behave (physics, menus, editor, online mode) is in the js/ folder.
+  Read README.txt for a full guide to the project.
+
+  Things you will see a lot in this file:
+    - id="something"     → a unique name. The JavaScript finds the element with
+                           getElement('something').
+    - class="something"  → a style name. The CSS files say how each class looks.
+    - data-text="es|en"  → translatable text. The JavaScript writes the Spanish part
+                           or the English part depending on the chosen language
+                           (that is why many elements look empty here).
+                           data-aria-text, data-title-text and data-placeholder-text
+                           do the same for the screen-reader label, the tooltip
+                           and the placeholder of a text box.
+    - hidden             → the element starts hidden; the JavaScript shows it when needed.
+  ======================================================================
 -->
 <html lang="es">
   <head>
@@ -20,7 +27,8 @@
     <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
     <title>Parábola Brava</title>
 
-    <!-- Tipografías de Google Fonts: Lilita One (títulos), IBM Plex Sans (texto), IBM Plex Mono (números), Kalam (escritura a mano) -->
+    <!-- Fonts from Google Fonts: Lilita One (titles), IBM Plex Sans (text),
+         IBM Plex Mono (numbers) and Kalam (hand writing) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -28,104 +36,80 @@
       rel="stylesheet"
     />
 
-    <!-- Hojas de estilo (el orden importa: base.css primero porque define los colores).
-     El "?v=N" del final es el número de versión: al cambiarlo, el navegador descarga el archivo nuevo
-     en lugar de usar la copia guardada (caché). -->
-    <link rel="stylesheet" href="css/base.css?v=9" />
-    <link rel="stylesheet" href="css/menus.css?v=9" />
-    <link rel="stylesheet" href="css/juego.css?v=9" />
-    <link rel="stylesheet" href="css/editor.css?v=9" />
-    <link rel="stylesheet" href="css/online.css?v=9" />
+    <!-- Style sheets. The order matters: base.css goes first because it defines the colors.
+         The "?v=10" at the end is the version number: when it changes, browsers download
+         the new file instead of using an old saved copy (the "cache"). -->
+    <link rel="stylesheet" href="css/base.css?v=10" />
+    <link rel="stylesheet" href="css/menus.css?v=10" />
+    <link rel="stylesheet" href="css/game.css?v=10" />
+    <link rel="stylesheet" href="css/editor.css?v=10" />
+    <link rel="stylesheet" href="css/online.css?v=10" />
   </head>
   <body>
-    <!-- Canvas del fondo animado de los menús (lo dibuja js/6-menus/fondo-animado.js) -->
-    <canvas id="bg" aria-hidden="true"></canvas>
+    <!-- Canvas behind the menus with the animated blueprint (drawn by js/6-menus/menu-background.js) -->
+    <canvas id="menuBackgroundCanvas" aria-hidden="true"></canvas>
 
     <!-- ================================================================
-     PANTALLA DE INICIO
-     Logo, botones Jugar / Online / Cómo jugar / Configuración.
-     Los menús desplegables (onlineMenu, setMenu) empiezan con el atributo "hidden"
-     (ocultos) y el JavaScript los muestra al pulsar su botón.
-     ================================================================ -->
-    <main id="homeScreen" class="menuScreen">
+         HOME SCREEN
+         Logo and the buttons Play / Online / How to play / Settings.
+         The drop-down menus (onlineMenu and settingsMenu) start hidden and the
+         JavaScript shows them when their button is pressed.
+         ================================================================ -->
+    <main id="homeScreen" class="menu-screen">
       <h1 class="logo">Parábola <span>Brava</span></h1>
       <p
         class="tagline"
-        data-l="Tiro parabólico y vectores de desplazamiento, sin resistencia del aire|Projectile motion and displacement vectors, with no air resistance"
+        data-text="Tiro parabólico y vectores de desplazamiento, sin resistencia del aire|Projectile motion and displacement vectors, with no air resistance"
       ></p>
-      <div class="menuBtns">
-        <button class="mbtn play" id="btnPlay" type="button" data-l="Jugar|Play"></button>
-        <div class="settings">
-          <button
-            class="mbtn online"
-            id="btnOnline"
-            type="button"
-            aria-expanded="false"
-            aria-controls="onlineMenu"
-          >
-            <span data-l="Online|Online"></span
-            ><small data-l="Juega con otras personas|Play with other people"></small>
+      <div class="menu-buttons">
+        <button class="menu-button menu-button-play" id="playButton" type="button" data-text="Jugar|Play"></button>
+
+        <!-- Online button and its small menu -->
+        <div class="dropdown-wrapper">
+          <button class="menu-button menu-button-online" id="onlineButton" type="button" aria-expanded="false" aria-controls="onlineMenu">
+            <span data-text="Online|Online"></span><small data-text="Juega con otras personas|Play with other people"></small>
           </button>
-          <div class="setmenu onmenu" id="onlineMenu" hidden>
-            <button class="onopt" id="btnOnJoin" type="button">
-              <b data-l="Unirse a un juego|Join a game"></b
-              ><small data-l="Tengo un código de 5 caracteres|I have a 5-character code"></small>
+          <div class="dropdown-menu online-menu" id="onlineMenu" hidden>
+            <button class="online-option" id="onlineJoinButton" type="button">
+              <b data-text="Unirse a un juego|Join a game"></b><small data-text="Tengo un código de 5 caracteres|I have a 5-character code"></small>
             </button>
-            <button class="onopt" id="btnOnCreate" type="button">
-              <b data-l="Partida de clase|Class game"></b
-              ><small
-                data-l="Tú eliges niveles y reglas y ves el progreso de todos|You pick levels and rules and watch everyone’s progress"
-              ></small>
+            <button class="online-option" id="onlineClassGameButton" type="button">
+              <b data-text="Partida de clase|Class game"></b
+              ><small data-text="Tú eliges niveles y reglas y ves el progreso de todos|You pick levels and rules and watch everyone’s progress"></small>
             </button>
-            <button class="onopt" id="btnOnDuel" type="button">
-              <b data-l="Duelo 1 vs 1|1 vs 1 duel"></b
-              ><small
-                data-l="Carrera o Escondite: tú también juegas|Race or Hide &amp; seek: you play too"
-              ></small>
+            <button class="online-option" id="onlineDuelButton" type="button">
+              <b data-text="Duelo 1 vs 1|1 vs 1 duel"></b><small data-text="Carrera o Escondite: tú también juegas|Race or Hide &amp; seek: you play too"></small>
             </button>
           </div>
         </div>
-        <button class="mbtn" id="btnHow" type="button" data-l="Cómo jugar|How to play"></button>
-        <div class="settings">
-          <button
-            class="mbtn"
-            id="btnSettings"
-            type="button"
-            aria-expanded="false"
-            aria-controls="setMenu"
-            data-l="Configuración|Settings"
-          ></button>
-          <div class="setmenu" id="setMenu" hidden>
-            <div class="setrow">
-              <span class="setlabel" data-l="Idioma|Language"></span>
-              <div class="seg2" role="group" data-la="Idioma|Language">
-                <button type="button" data-lang="es">Español</button>
-                <button type="button" data-lang="en">English</button>
+
+        <button class="menu-button" id="howToPlayButton" type="button" data-text="Cómo jugar|How to play"></button>
+
+        <!-- Settings button and its small menu -->
+        <div class="dropdown-wrapper">
+          <button class="menu-button" id="settingsButton" type="button" aria-expanded="false" aria-controls="settingsMenu" data-text="Configuración|Settings"></button>
+          <div class="dropdown-menu" id="settingsMenu" hidden>
+            <div class="settings-row">
+              <span class="settings-label" data-text="Idioma|Language"></span>
+              <div class="segmented-buttons" role="group" data-aria-text="Idioma|Language">
+                <!-- data-language tells the JavaScript which language each button chooses -->
+                <button type="button" data-language="es">Español</button>
+                <button type="button" data-language="en">English</button>
               </div>
             </div>
-            <label class="check"
-              ><input type="checkbox" id="setAnim" />
-              <span data-l="Animaciones del fondo|Background animations"></span
-            ></label>
-            <label class="check"
-              ><input type="checkbox" id="setSound" /> <span data-l="Efectos de sonido|Sound effects"></span
-            ></label>
-            <div class="setrow">
-              <button
-                class="btn danger small"
-                id="btnReset"
-                type="button"
-                data-l="Reiniciar progreso|Reset progress"
-              ></button>
+            <label class="checkbox-label"><input type="checkbox" id="backgroundAnimationCheckbox" /> <span data-text="Animaciones del fondo|Background animations"></span></label>
+            <label class="checkbox-label"><input type="checkbox" id="soundEffectsCheckbox" /> <span data-text="Efectos de sonido|Sound effects"></span></label>
+            <div class="settings-row">
+              <button class="button button-danger button-small" id="resetProgressButton" type="button" data-text="Reiniciar progreso|Reset progress"></button>
               <small
                 class="hint"
-                id="resetNote"
-                data-l="Borra estrellas y niveles desbloqueados. Tus niveles creados se conservan.|Clears stars and unlocked levels. Your own levels are kept."
+                id="resetProgressNote"
+                data-text="Borra estrellas y niveles desbloqueados. Tus niveles creados se conservan.|Clears stars and unlocked levels. Your own levels are kept."
               ></small>
             </div>
-            <div class="verRow">
-              <small class="hint" id="verText"></small>
-              <button class="btn ghost small" id="btnUpdate" type="button"></button>
+            <div class="version-row">
+              <small class="hint" id="versionText"></small>
+              <button class="button button-outline button-small" id="updateButton" type="button"></button>
             </div>
           </div>
         </div>
@@ -133,391 +117,287 @@
     </main>
 
     <!-- ================================================================
-     MENÚ DE SELECCIÓN
-     Las tarjetas de modo (#modeGrid) y la lista de niveles (#levelPanel) están vacías:
-     las rellena js/6-menus/menus.js (funciones renderMenus y renderLevelPanel).
-     ================================================================ -->
-    <main id="selectScreen" class="menuScreen" hidden>
-      <div class="selWrap">
-        <div class="selHead">
-          <button class="mbtn inline" id="btnSelBack" type="button" data-l="← Inicio|← Home"></button>
-          <h2 data-l="¿Qué quieres jugar?|What do you want to play?"></h2>
-          <button
-            class="btn edit"
-            id="btnToEditor"
-            type="button"
-            data-l="Editor de niveles|Level editor"
-          ></button>
+         LEVEL SELECT SCREEN
+         The mode cards (#modeCardGrid) and the level list (#levelListPanel) start empty:
+         js/6-menus/menus.js fills them (functions renderModeCards and renderLevelList).
+         ================================================================ -->
+    <main id="levelSelectScreen" class="menu-screen" hidden>
+      <div class="level-select-wrapper">
+        <div class="level-select-header">
+          <button class="menu-button menu-button-inline" id="levelSelectBackButton" type="button" data-text="← Inicio|← Home"></button>
+          <h2 data-text="¿Qué quieres jugar?|What do you want to play?"></h2>
+          <button class="button button-accent" id="openEditorButton" type="button" data-text="Editor de niveles|Level editor"></button>
         </div>
-        <div class="modeGrid" id="modeGrid"></div>
-        <div class="levelPanel" id="levelPanel"></div>
+        <div class="mode-card-grid" id="modeCardGrid"></div>
+        <div class="level-list-panel" id="levelListPanel"></div>
       </div>
     </main>
 
     <!-- ================================================================
-     PANTALLAS ONLINE
-     Todo su contenido se genera desde js/5-online/pantallas-online.js (renderOnline).
-     ================================================================ -->
-    <main id="onlineScreen" class="menuScreen" hidden>
-      <div class="onWrap" id="onBody"></div>
+         ONLINE SCREENS
+         All of their content is created by js/5-online/online-screens.js (renderOnlineScreen).
+         ================================================================ -->
+    <main id="onlineScreen" class="menu-screen" hidden>
+      <div class="online-wrapper" id="onlineScreenContent"></div>
     </main>
 
     <!-- ================================================================
-     PANTALLA DE JUEGO (también contiene el editor)
-     - gamebar: barra superior (Menú, nombre, puntos...)
-     - stage:   el recuadro con el <canvas id="cv"> donde se dibuja la escena
-     - playUI:  paneles del modo juego (datos/respuestas o controles del lanzador)
-     - editUI:  paneles del editor de niveles
-     ================================================================ -->
-    <div id="gameScreen" class="app" hidden>
-      <header class="gamebar">
-        <div class="left">
-          <button class="btn ghost small" id="btnMenu" type="button" data-l="← Menú|← Menu"></button>
-          <span class="brandSmall">Parábola <span>Brava</span></span>
-          <span class="hint">g = <span id="gLabel">9.81</span> m/s²</span>
-          <span class="onChip" id="onChip" hidden></span>
+         GAME SCREEN (it also contains the level editor)
+         - top bar:       Menu button, game name, gravity, score
+         - stage:         the box with <canvas id="gameCanvas"> where the scene is drawn
+         - playControls:  panels used while playing
+         - editorPanels:  panels of the level editor
+         ================================================================ -->
+    <div id="gameScreen" class="game-screen" hidden>
+      <header class="game-top-bar">
+        <div class="top-bar-left">
+          <button class="button button-outline button-small" id="gameMenuButton" type="button" data-text="← Menú|← Menu"></button>
+          <span class="brand-small">Parábola <span>Brava</span></span>
+          <span class="hint">g = <span id="gravityLabel">9.81</span> m/s²</span>
+          <span class="online-status-chip" id="onlineStatusChip" hidden></span>
         </div>
-        <div class="topRight">
+        <div class="top-bar-right">
           <button
-            id="onBoardBtn"
-            class="btn ghost small"
+            id="leaderboardButton"
+            class="button button-outline button-small"
             type="button"
             aria-expanded="false"
-            aria-controls="onBoard"
+            aria-controls="leaderboardPanel"
             hidden
-            data-l="Tabla de posiciones|Leaderboard"
+            data-text="Tabla de posiciones|Leaderboard"
           ></button>
-          <button id="editThis" class="btn ghost small" type="button"></button>
-          <button id="editBtn" class="btn edit" type="button"></button>
-          <div class="score"><span data-l="Puntos|Score"></span><b id="score">0</b></div>
+          <button id="editThisLevelButton" class="button button-outline button-small" type="button"></button>
+          <button id="editorToggleButton" class="button button-accent" type="button"></button>
+          <div class="score-box"><span data-text="Puntos|Score"></span><b id="scoreValue">0</b></div>
         </div>
       </header>
 
-      <div class="rivalBar" id="rivalBar" hidden aria-live="polite"></div>
-      <div class="onBoard" id="onBoard" hidden></div>
-      <div class="stageWrap" id="stageWrap">
+      <!-- Only in duels: what the rival is doing right now -->
+      <div class="rival-status-bar" id="rivalStatusBar" hidden aria-live="polite"></div>
+      <!-- Only online: leaderboard that opens with the "Leaderboard" button -->
+      <div class="leaderboard-panel" id="leaderboardPanel" hidden></div>
+
+      <div class="stage-wrapper" id="stageWrapper">
         <section class="stage" id="stage">
-          <canvas id="cv" data-la="Escena del juego|Game scene"></canvas>
+          <canvas id="gameCanvas" data-aria-text="Escena del juego|Game scene"></canvas>
+          <!-- Small labels in the top-left corner of the scene -->
           <div class="hud">
-            <span id="hudTag" class="tag"></span><span id="hudPhase" class="phase"></span
-            ><span id="hudLevel"></span><span id="hudShots" class="shots"></span><span id="hudTargets"></span>
+            <span id="hudModeTag" class="hud-mode-tag"></span><span id="hudPhaseTag" class="hud-phase-tag"></span><span id="hudLevelName"></span
+            ><span id="hudShotsLeft" class="hud-shots"></span><span id="hudTargetsLeft"></span>
           </div>
-          <div class="overlay" id="overlay" hidden>
-            <div class="card">
-              <h2 id="ovTitle"></h2>
-              <div class="stars" id="ovStars"></div>
-              <p id="ovText"></p>
-              <div class="ovBtns">
-                <button id="ovRetry" class="btn ghost" type="button"></button>
-                <button id="ovNext" class="btn" type="button"></button>
+          <!-- Card shown when a level ends -->
+          <div class="level-end-overlay" id="levelEndOverlay" hidden>
+            <div class="level-end-card">
+              <h2 id="levelEndTitle"></h2>
+              <div class="stars" id="levelEndStars"></div>
+              <p id="levelEndText"></p>
+              <div class="level-end-buttons">
+                <button id="levelEndRetryButton" class="button button-outline" type="button"></button>
+                <button id="levelEndNextButton" class="button" type="button"></button>
               </div>
             </div>
           </div>
         </section>
-        <div class="popcard" id="pop" hidden></div>
+        <!-- Editor only: floating card with the properties of the selected thing -->
+        <div class="property-card" id="editorPropertyCard" hidden></div>
       </div>
 
-      <!-- ---------- MODO JUEGO: findUI = resolver vectores · shootUI = controles del lanzador ---------- -->
-      <div id="playUI" class="stack">
-        <section id="findUI" class="panels" hidden>
-          <div class="panel find">
-            <h3 data-l="Datos conocidos|Known data"></h3>
-            <div id="clues" class="clues"></div>
-            <div class="btnrow">
-              <button
-                id="replay"
-                class="btn ghost small"
-                type="button"
-                data-l="Repetir recorrido|Replay the path"
-              ></button>
+      <!-- ---------- PLAY MODE ---------- -->
+      <div id="playControls" class="stack">
+        <!-- Vector levels: known data and answer boxes -->
+        <section id="vectorPuzzlePanels" class="panel-grid" hidden>
+          <div class="panel panel-vector">
+            <h3 data-text="Datos conocidos|Known data"></h3>
+            <div id="knownDataList" class="known-data"></div>
+            <div class="button-row">
+              <button id="replayPathButton" class="button button-outline button-small" type="button" data-text="Repetir recorrido|Replay the path"></button>
             </div>
           </div>
-          <div class="panel find">
-            <h3 id="ansTitle"></h3>
-            <div id="ansForm" class="stack">
-              <div class="fields" id="ansFields"></div>
-              <div class="btnrow">
-                <button id="ansCheck" class="btn vec" type="button" data-l="Comprobar|Check"></button
-                ><small class="hint" id="ansTries"></small>
+          <div class="panel panel-vector">
+            <h3 id="answerTitle"></h3>
+            <div id="answerForm" class="stack">
+              <div class="form-fields" id="answerFields"></div>
+              <div class="button-row">
+                <button id="checkAnswerButton" class="button button-vector" type="button" data-text="Comprobar|Check"></button><small class="hint" id="attemptsInfo"></small>
               </div>
-              <div id="ansFb" class="fb" role="status"></div>
+              <div id="answerFeedback" class="answer-feedback" role="status"></div>
             </div>
-            <div id="ansSol" class="sol" hidden></div>
+            <div id="solutionPanel" class="solution" hidden></div>
           </div>
         </section>
 
-        <div id="shootUI" class="stack">
-          <section class="controls">
-            <div class="ctl">
-              <label for="v0"
-                ><span data-l="Velocidad inicial|Initial speed"></span> <i>v₀</i>
-                <b class="lock" id="v0Lock" hidden data-l="Fija|Fixed"></b
+        <!-- Launch levels: the launcher controls, equations and telemetry -->
+        <div id="launchControls" class="stack">
+          <section class="launch-controls">
+            <div class="control-box">
+              <label for="launchSpeedSlider"
+                ><span data-text="Velocidad inicial|Initial speed"></span> <i>v₀</i>
+                <b class="lock-badge" id="launchSpeedLockBadge" hidden data-text="Fija|Fixed"></b
               ></label>
-              <div class="row">
-                <input type="range" id="v0" min="5" max="45" step="0.5" value="18" />
-                <span class="num"
-                  ><input
-                    type="number"
-                    id="v0n"
-                    min="5"
-                    max="45"
-                    step="0.5"
-                    value="18"
-                    data-la="v₀ en m/s|v₀ in m/s"
-                  /><em>m/s</em></span
+              <div class="control-row">
+                <input type="range" id="launchSpeedSlider" min="5" max="45" step="0.5" value="18" />
+                <span class="number-with-unit"
+                  ><input type="number" id="launchSpeedInput" min="5" max="45" step="0.5" value="18" data-aria-text="v₀ en m/s|v₀ in m/s" /><em>m/s</em></span
                 >
               </div>
-              <small class="hint" id="v0Hint"></small>
+              <small class="hint" id="launchSpeedHint"></small>
             </div>
-            <div class="ctl">
-              <label for="ang"
-                ><span data-l="Ángulo|Angle"></span> <i>θ</i>
-                <b class="lock" id="angLock" hidden data-l="Fijo|Fixed"></b
+            <div class="control-box">
+              <label for="launchAngleSlider"
+                ><span data-text="Ángulo|Angle"></span> <i>θ</i> <b class="lock-badge" id="launchAngleLockBadge" hidden data-text="Fijo|Fixed"></b
               ></label>
-              <div class="row">
-                <input type="range" id="ang" min="-30" max="85" step="1" value="45" />
-                <span class="num"
-                  ><input
-                    type="number"
-                    id="angn"
-                    min="-30"
-                    max="85"
-                    step="1"
-                    value="45"
-                    data-la="θ en grados|θ in degrees"
-                  /><em>°</em></span
+              <div class="control-row">
+                <input type="range" id="launchAngleSlider" min="-30" max="85" step="1" value="45" />
+                <span class="number-with-unit"
+                  ><input type="number" id="launchAngleInput" min="-30" max="85" step="1" value="45" data-aria-text="θ en grados|θ in degrees" /><em>°</em></span
                 >
               </div>
-              <small class="hint" id="angHint"></small>
+              <small class="hint" id="launchAngleHint"></small>
             </div>
-            <div class="ctl">
-              <label for="h0"
-                ><span data-l="Altura de lanzamiento|Launch height"></span> <i>h₀</i>
-                <b class="lock" id="h0Lock" hidden data-l="Fija|Fixed"></b
+            <div class="control-box">
+              <label for="launchHeightSlider"
+                ><span data-text="Altura de lanzamiento|Launch height"></span> <i>h₀</i>
+                <b class="lock-badge" id="launchHeightLockBadge" hidden data-text="Fija|Fixed"></b
               ></label>
-              <div class="row">
-                <input type="range" id="h0" min="0" max="15" step="0.5" value="2" />
-                <span class="num"
-                  ><input
-                    type="number"
-                    id="h0n"
-                    min="0"
-                    max="15"
-                    step="0.5"
-                    value="2"
-                    data-la="h₀ en metros|h₀ in meters"
-                  /><em>m</em></span
+              <div class="control-row">
+                <input type="range" id="launchHeightSlider" min="0" max="15" step="0.5" value="2" />
+                <span class="number-with-unit"
+                  ><input type="number" id="launchHeightInput" min="0" max="15" step="0.5" value="2" data-aria-text="h₀ en metros|h₀ in meters" /><em>m</em></span
                 >
               </div>
-              <small class="hint" id="h0Hint"></small>
+              <small class="hint" id="launchHeightHint"></small>
             </div>
-            <div class="ctl">
-              <label for="grav"
-                ><span data-l="Gravedad|Gravity"></span>
-                <b class="lock" id="gLock" hidden data-l="Fija|Fixed"></b
-              ></label>
-              <select id="grav"></select>
-              <label class="check" for="practice"
-                ><input type="checkbox" id="practice" />
-                <span
-                  data-l="Modo práctica (trayectoria completa, sin estrellas)|Practice mode (full path, no stars)"
-                ></span
+            <div class="control-box">
+              <label for="gravitySelect"><span data-text="Gravedad|Gravity"></span> <b class="lock-badge" id="gravityLockBadge" hidden data-text="Fija|Fixed"></b></label>
+              <select id="gravitySelect"></select>
+              <label class="checkbox-label" for="practiceModeCheckbox"
+                ><input type="checkbox" id="practiceModeCheckbox" />
+                <span data-text="Modo práctica (trayectoria completa, sin estrellas)|Practice mode (full path, no stars)"></span
               ></label>
             </div>
-            <button id="fire" class="fire" type="button">
-              <span data-l="¡Lanzar!|Launch!"></span><small data-l="Enter o espacio|Enter or space"></small>
+            <button id="launchButton" class="launch-button" type="button">
+              <span data-text="¡Lanzar!|Launch!"></span><small data-text="Enter o espacio|Enter or space"></small>
             </button>
           </section>
-          <section class="panels">
+          <section class="panel-grid">
             <div class="panel">
-              <h3 data-l="Ecuaciones del tiro|Launch equations"></h3>
-              <div id="eq" class="eq"></div>
+              <h3 data-text="Ecuaciones del tiro|Launch equations"></h3>
+              <div id="launchEquations" class="launch-equations"></div>
             </div>
             <div class="panel">
-              <h3 data-l="Telemetría|Telemetry"></h3>
-              <div id="tele" class="tele"></div>
+              <h3 data-text="Telemetría|Telemetry"></h3>
+              <div id="telemetry" class="telemetry"></div>
             </div>
           </section>
         </div>
       </div>
 
-      <!-- ---------- MODO EDITOR (lo controla la carpeta js/3-editor/) ---------- -->
-      <div id="editUI" class="editor" hidden>
-        <div class="tabs" role="tablist" data-la="Tipo de nivel|Level type">
-          <button class="tab" id="tabC" role="tab" type="button" aria-selected="true">
-            <span data-l="Lanzamiento|Launch"></span
-            ><small
-              data-l="Derriba los objetivos con el tiro parabólico|Knock down the targets with projectile motion"
-            ></small>
+      <!-- ---------- EDITOR MODE (controlled by the js/3-editor/ folder) ---------- -->
+      <div id="editorPanels" class="editor" hidden>
+        <!-- Level type tabs -->
+        <div class="editor-tabs" role="tablist" data-aria-text="Tipo de nivel|Level type">
+          <button class="editor-tab" id="editorLaunchTab" role="tab" type="button" aria-selected="true">
+            <span data-text="Lanzamiento|Launch"></span><small data-text="Derriba los objetivos con el tiro parabólico|Knock down the targets with projectile motion"></small>
           </button>
-          <button class="tab d" id="tabD" role="tab" type="button" aria-selected="false">
-            <span data-l="Desplazamiento|Displacement"></span
-            ><small data-l="Resuelve los vectores del cochinito|Solve the piglet’s vectors"></small>
+          <button class="editor-tab editor-tab-displacement" id="editorDisplacementTab" role="tab" type="button" aria-selected="false">
+            <span data-text="Desplazamiento|Displacement"></span><small data-text="Resuelve los vectores del cochinito|Solve the piglet’s vectors"></small>
           </button>
-          <button class="tab m" id="tabM" role="tab" type="button" aria-selected="false">
-            <span data-l="Mixto|Mixed"></span
-            ><small
-              data-l="Primero resuelve los vectores, luego lanza|Solve the vectors first, then launch"
-            ></small>
+          <button class="editor-tab editor-tab-mixed" id="editorMixedTab" role="tab" type="button" aria-selected="false">
+            <span data-text="Mixto|Mixed"></span><small data-text="Primero resuelve los vectores, luego lanza|Solve the vectors first, then launch"></small>
           </button>
         </div>
 
-        <div class="toolbar" role="toolbar" data-la="Herramientas del editor|Editor tools">
-          <button class="tool" type="button" data-tool="select" aria-pressed="true">
-            <i></i><span data-l="Mover|Move"></span>
-          </button>
-          <button class="tool" type="button" data-tool="start" aria-pressed="false" hidden>
-            <i></i><span data-l="Punto A|Point A"></span>
-          </button>
-          <button class="tool piece" type="button" data-tool="wood" aria-pressed="false">
-            <i></i><span data-l="Madera|Wood"></span>
-          </button>
-          <button class="tool piece" type="button" data-tool="stone" aria-pressed="false">
-            <i></i><span data-l="Piedra|Stone"></span>
-          </button>
-          <button class="tool piece" type="button" data-tool="target" aria-pressed="false">
-            <i></i><span data-l="Objetivo|Target"></span>
-          </button>
-          <button class="tool piece" type="button" data-tool="terrain" aria-pressed="false">
-            <i></i><span data-l="Terreno|Terrain"></span>
-          </button>
-          <button class="tool piece" type="button" data-tool="erase" aria-pressed="false">
-            <i></i><span data-l="Borrar|Erase"></span>
-          </button>
-          <span class="sep" aria-hidden="true"></span>
-          <button
-            id="ed-undo"
-            class="btn ghost small"
-            type="button"
-            data-l="↶ Deshacer|↶ Undo"
-            data-lt="Deshacer (Ctrl+Z)|Undo (Ctrl+Z)"
-          ></button>
-          <button
-            id="ed-redo"
-            class="btn ghost small"
-            type="button"
-            data-l="↷ Rehacer|↷ Redo"
-            data-lt="Rehacer (Ctrl+Y)|Redo (Ctrl+Y)"
-          ></button>
-          <span class="toolHint" id="toolHint"></span>
-          <label class="check"
-            ><input type="checkbox" id="ed-snap" /> <span data-l="Valores redondos|Round values"></span
-          ></label>
-          <label class="check"
-            ><input type="checkbox" id="ed-gridview" checked />
-            <span data-l="Cuadrícula en el editor|Grid in the editor"></span
-          ></label>
+        <!-- Tool bar. data-tool says which tool each button selects -->
+        <div class="editor-toolbar" role="toolbar" data-aria-text="Herramientas del editor|Editor tools">
+          <button class="editor-tool" type="button" data-tool="select" aria-pressed="true"><i></i><span data-text="Mover|Move"></span></button>
+          <button class="editor-tool" type="button" data-tool="start" aria-pressed="false" hidden><i></i><span data-text="Punto A|Point A"></span></button>
+          <button class="editor-tool editor-tool-piece" type="button" data-tool="wood" aria-pressed="false"><i></i><span data-text="Madera|Wood"></span></button>
+          <button class="editor-tool editor-tool-piece" type="button" data-tool="stone" aria-pressed="false"><i></i><span data-text="Piedra|Stone"></span></button>
+          <button class="editor-tool editor-tool-piece" type="button" data-tool="target" aria-pressed="false"><i></i><span data-text="Objetivo|Target"></span></button>
+          <button class="editor-tool editor-tool-piece" type="button" data-tool="terrain" aria-pressed="false"><i></i><span data-text="Terreno|Terrain"></span></button>
+          <button class="editor-tool editor-tool-piece" type="button" data-tool="erase" aria-pressed="false"><i></i><span data-text="Borrar|Erase"></span></button>
+          <span class="toolbar-separator" aria-hidden="true"></span>
+          <button id="editorUndoButton" class="button button-outline button-small" type="button" data-text="↶ Deshacer|↶ Undo" data-title-text="Deshacer (Ctrl+Z)|Undo (Ctrl+Z)"></button>
+          <button id="editorRedoButton" class="button button-outline button-small" type="button" data-text="↷ Rehacer|↷ Redo" data-title-text="Rehacer (Ctrl+Y)|Redo (Ctrl+Y)"></button>
+          <span class="editor-tool-hint" id="editorToolHint"></span>
+          <label class="checkbox-label"><input type="checkbox" id="roundValuesCheckbox" /> <span data-text="Valores redondos|Round values"></span></label>
+          <label class="checkbox-label"><input type="checkbox" id="editorGridCheckbox" checked /> <span data-text="Cuadrícula en el editor|Grid in the editor"></span></label>
         </div>
 
-        <div class="panel wide" id="tplPanel">
-          <h3 data-l="Plantillas|Templates"></h3>
-          <div class="tplgroup" id="tplVec">
-            <span
-              class="glabel"
-              data-l="Vectores · qué debe encontrar el jugador|Vectors · what the player must find"
-            ></span>
-            <div class="tpls" id="tpl-vec"></div>
+        <!-- Templates (the buttons are created by js/3-editor/editor-templates.js) -->
+        <div class="panel panel-wide" id="templatesPanel">
+          <h3 data-text="Plantillas|Templates"></h3>
+          <div class="template-group" id="vectorTemplatesGroup">
+            <span class="template-group-label" data-text="Vectores · qué debe encontrar el jugador|Vectors · what the player must find"></span>
+            <div class="template-buttons" id="vectorTemplateButtons"></div>
           </div>
-          <div class="tplgroup" id="tplMix">
-            <span
-              class="glabel"
-              data-l="Mixto · vectores y lanzamiento a la vez|Mixed · vectors and launch together"
-            ></span>
-            <div class="tpls" id="tpl-mix"></div>
+          <div class="template-group" id="mixedTemplatesGroup">
+            <span class="template-group-label" data-text="Mixto · vectores y lanzamiento a la vez|Mixed · vectors and launch together"></span>
+            <div class="template-buttons" id="mixedTemplateButtons"></div>
           </div>
-          <div class="tplgroup" id="tplPar">
-            <span
-              class="glabel"
-              data-l="Parábola · qué puede ajustar el jugador al lanzar|Parabola · what the player can adjust when launching"
-            ></span>
-            <div class="tpls" id="tpl-par"></div>
+          <div class="template-group" id="launchTemplatesGroup">
+            <span class="template-group-label" data-text="Parábola · qué puede ajustar el jugador al lanzar|Parabola · what the player can adjust when launching"></span>
+            <div class="template-buttons" id="launchTemplateButtons"></div>
           </div>
           <small
             class="hint"
-            data-l="Una plantilla decide qué es dato y qué es incógnita, y añade vectores si hacen falta. Después solo ajustas los valores. Deshacer la revierte.|A template decides what is given and what is unknown, and adds vectors if needed. Then you just adjust the values. Undo reverts it."
+            data-text="Una plantilla decide qué es dato y qué es incógnita, y añade vectores si hacen falta. Después solo ajustas los valores. Deshacer la revierte.|A template decides what is given and what is unknown, and adds vectors if needed. Then you just adjust the values. Undo reverts it."
           ></small>
         </div>
 
-        <div class="edGrid">
-          <div class="panel wide find" id="movPanel" hidden>
-            <div class="smartHead">
-              <h3 data-l="Variables del problema|Problem variables"></h3>
-              <button
-                id="mv-add"
-                class="btn ghost small"
-                type="button"
-                data-l="Añadir vector|Add vector"
-              ></button>
+        <div class="editor-grid">
+          <!-- "Problem variables" panel (only for vector levels) -->
+          <div class="panel panel-wide panel-vector" id="puzzleVariablesPanel" hidden>
+            <div class="panel-header">
+              <h3 data-text="Variables del problema|Problem variables"></h3>
+              <button id="addVectorButton" class="button button-outline button-small" type="button" data-text="Añadir vector|Add vector"></button>
             </div>
-            <div class="status" id="sv-status" role="status"></div>
+            <div class="puzzle-status" id="puzzleStatus" role="status"></div>
             <div class="legend">
+              <span><b class="legend-given" data-text="Dato|Given"></b> <span data-text="el jugador lo ve|the player sees it"></span></span>
+              <span><b class="legend-unknown">?</b> <span data-text="incógnita que debe encontrar|unknown to find"></span></span>
+              <span><b>—</b> <span data-text="oculto|hidden"></span></span>
               <span
-                ><b class="ld" data-l="Dato|Given"></b>
-                <span data-l="el jugador lo ve|the player sees it"></span></span
-              ><span
-                ><b class="li">?</b> <span data-l="incógnita que debe encontrar|unknown to find"></span></span
-              ><span><b>—</b> <span data-l="oculto|hidden"></span></span
-              ><span
-                data-l="El botón “?” se apaga cuando con los datos actuales esa variable no se puede calcular.|The “?” button turns off when that variable can’t be worked out from the current data."
+                data-text="El botón “?” se apaga cuando con los datos actuales esa variable no se puede calcular.|The “?” button turns off when that variable can’t be worked out from the current data."
               ></span>
             </div>
-            <div class="svgrid" id="sv-grid"></div>
-            <div class="fields">
-              <label class="field"
-                ><span data-l="A · x (m)|A · x (m)"></span><input type="number" id="mv-ax" step="0.5"
-              /></label>
-              <label class="field"
-                ><span data-l="A · y (m)|A · y (m)"></span><input type="number" id="mv-ay" step="0.5" min="0"
-              /></label>
-              <label class="field"
-                ><span data-l="Intentos de respuesta|Answer attempts"></span
-                ><input type="number" id="mv-tries" min="1" max="6" step="1"
-              /></label>
-              <label class="field"
-                ><span data-l="Tolerancia en valores (%)|Value tolerance (%)"></span
-                ><input type="number" id="mv-tolD" min="1" max="25" step="0.5"
-              /></label>
-              <label class="field"
-                ><span data-l="Tolerancia en ángulos (°)|Angle tolerance (°)"></span
-                ><input type="number" id="mv-tolA" min="0.5" max="15" step="0.5"
-              /></label>
+            <div class="variable-card-grid" id="puzzleVariableCards"></div>
+            <div class="form-fields">
+              <label class="form-field"><span data-text="A · x (m)|A · x (m)"></span><input type="number" id="startPointXInput" step="0.5" /></label>
+              <label class="form-field"><span data-text="A · y (m)|A · y (m)"></span><input type="number" id="startPointYInput" step="0.5" min="0" /></label>
+              <label class="form-field"><span data-text="Intentos de respuesta|Answer attempts"></span><input type="number" id="answerAttemptsInput" min="1" max="6" step="1" /></label>
+              <label class="form-field"><span data-text="Tolerancia en valores (%)|Value tolerance (%)"></span><input type="number" id="valueToleranceInput" min="1" max="25" step="0.5" /></label>
+              <label class="form-field"><span data-text="Tolerancia en ángulos (°)|Angle tolerance (°)"></span><input type="number" id="angleToleranceInput" min="0.5" max="15" step="0.5" /></label>
             </div>
-            <div class="checks">
-              <label class="check"
-                ><input type="checkbox" id="mv-path" />
-                <span
-                  data-l="Mostrar el recorrido del cochinito (flechas de los vectores)|Show the piglet’s path (vector arrows)"
-                ></span
+            <div class="checkbox-row">
+              <label class="checkbox-label"
+                ><input type="checkbox" id="showPathCheckbox" />
+                <span data-text="Mostrar el recorrido del cochinito (flechas de los vectores)|Show the piglet’s path (vector arrows)"></span
               ></label>
-              <label class="check"
-                ><input type="checkbox" id="mv-hide" />
-                <span
-                  data-l="Ocultar los números de la escala hasta resolver|Hide the scale numbers until solved"
-                ></span
+              <label class="checkbox-label"
+                ><input type="checkbox" id="hideScaleCheckbox" /> <span data-text="Ocultar los números de la escala hasta resolver|Hide the scale numbers until solved"></span
               ></label>
             </div>
-            <details class="adv">
-              <summary
-                data-l="Vista avanzada: tabla de vectores y matriz completa|Advanced view: vector table and full matrix"
-              ></summary>
+            <details class="advanced-details">
+              <summary data-text="Vista avanzada: tabla de vectores y matriz completa|Advanced view: vector table and full matrix"></summary>
               <div class="stack" style="margin-top: 8px">
-                <div class="tablewrap">
-                  <table class="vars">
+                <div class="table-wrapper">
+                  <table class="data-table">
                     <thead>
                       <tr>
-                        <th data-l="Vector|Vector"></th>
-                        <th data-l="Tipo de magnitud|Quantity type"></th>
-                        <th data-l="Valores|Values"></th>
-                        <th data-l="Ángulo con la horizontal (°)|Angle from horizontal (°)"></th>
-                        <th data-l="Dirección|Direction"></th>
+                        <th data-text="Vector|Vector"></th>
+                        <th data-text="Tipo de magnitud|Quantity type"></th>
+                        <th data-text="Valores|Values"></th>
+                        <th data-text="Ángulo con la horizontal (°)|Angle from horizontal (°)"></th>
+                        <th data-text="Dirección|Direction"></th>
                         <th></th>
                       </tr>
                     </thead>
-                    <tbody id="mv-vecs"></tbody>
+                    <tbody id="advancedVectorTableBody"></tbody>
                   </table>
                 </div>
-                <div class="tablewrap">
-                  <table class="vars matrix">
+                <div class="table-wrapper">
+                  <table class="data-table matrix-table">
                     <thead>
                       <tr>
                         <th></th>
@@ -527,137 +407,90 @@
                         <th>v₀ (m/s)</th>
                         <th>t (s)</th>
                         <th>θ (°)</th>
-                        <th data-l="Dirección|Direction"></th>
+                        <th data-text="Dirección|Direction"></th>
                         <th>Δx (m)</th>
                         <th>Δy (m)</th>
                       </tr>
                     </thead>
-                    <tbody id="mx-body"></tbody>
+                    <tbody id="visibilityMatrixBody"></tbody>
                   </table>
                 </div>
               </div>
             </details>
           </div>
 
+          <!-- General level settings -->
           <div class="panel">
-            <h3 data-l="Nivel|Level"></h3>
-            <div class="fields">
-              <label class="field full"
-                ><span data-l="Nombre|Name"></span><input type="text" id="ed-name" maxlength="40"
-              /></label>
-              <label class="field"
-                ><span data-l="Ancho del mundo (m)|World width (m)"></span
-                ><input type="number" id="ed-W" min="20" max="150" step="1"
-              /></label>
-              <label class="field shootOnly"
-                ><span data-l="Tiros|Shots"></span
-                ><input type="number" id="ed-shots" min="1" max="10" step="1"
-              /></label>
-              <label class="field shootOnly"
-                ><span data-l="Gravedad|Gravity"></span
-                ><select id="ed-g-sel"></select
-              ></label>
-              <label class="field shootOnly" id="ed-g-wrap"
-                ><span>g (m/s²)</span><input type="number" id="ed-g" min="0.1" max="50" step="0.01"
-              /></label>
+            <h3 data-text="Nivel|Level"></h3>
+            <div class="form-fields">
+              <label class="form-field form-field-full"><span data-text="Nombre|Name"></span><input type="text" id="levelNameInput" maxlength="40" /></label>
+              <label class="form-field"><span data-text="Ancho del mundo (m)|World width (m)"></span><input type="number" id="worldWidthInput" min="20" max="150" step="1" /></label>
+              <label class="form-field launch-only"><span data-text="Tiros|Shots"></span><input type="number" id="shotCountInput" min="1" max="10" step="1" /></label>
+              <label class="form-field launch-only"><span data-text="Gravedad|Gravity"></span><select id="editorGravitySelect"></select></label>
+              <label class="form-field launch-only" id="customGravityField"><span>g (m/s²)</span><input type="number" id="customGravityInput" min="0.1" max="50" step="0.01" /></label>
             </div>
-            <label class="check shootOnly"
-              ><input type="checkbox" id="ed-g-lock" />
-              <span data-l="El jugador no puede cambiar la gravedad|The player can’t change gravity"></span
+            <label class="checkbox-label launch-only"
+              ><input type="checkbox" id="gravityLockedCheckbox" /> <span data-text="El jugador no puede cambiar la gravedad|The player can’t change gravity"></span
             ></label>
-            <label class="check"
-              ><input type="checkbox" id="ed-grid" /> <span id="ed-grid-label"></span
-            ></label>
-            <div class="counts" id="edCounts"></div>
+            <label class="checkbox-label"><input type="checkbox" id="playerSeesGridCheckbox" /> <span id="playerSeesGridLabel"></span></label>
+            <div class="piece-counts" id="pieceCounts"></div>
           </div>
 
-          <div class="panel wide shootOnly" id="varsPanel">
-            <h3 data-l="Variables del lanzamiento|Launch variables"></h3>
-            <div class="tablewrap">
-              <table class="vars">
+          <!-- Launch variables table (starting value, minimum, maximum, step, fixed) -->
+          <div class="panel panel-wide launch-only" id="launchVariablesPanel">
+            <h3 data-text="Variables del lanzamiento|Launch variables"></h3>
+            <div class="table-wrapper">
+              <table class="data-table">
                 <thead>
                   <tr>
-                    <th data-l="Variable|Variable"></th>
-                    <th data-l="Valor inicial|Starting value"></th>
-                    <th data-l="Mínimo|Minimum"></th>
-                    <th data-l="Máximo|Maximum"></th>
-                    <th data-l="Paso|Step"></th>
-                    <th data-l="Acceso|Access"></th>
+                    <th data-text="Variable|Variable"></th>
+                    <th data-text="Valor inicial|Starting value"></th>
+                    <th data-text="Mínimo|Minimum"></th>
+                    <th data-text="Máximo|Maximum"></th>
+                    <th data-text="Paso|Step"></th>
+                    <th data-text="Acceso|Access"></th>
                   </tr>
                 </thead>
-                <tbody id="edVars"></tbody>
+                <tbody id="launchVariablesTableBody"></tbody>
               </table>
             </div>
             <small
               class="hint"
-              data-l="Una variable fija no se puede modificar al jugar: el jugador usa siempre su valor inicial. Las demás solo se mueven entre el mínimo y el máximo. También puedes arrastrar la flecha del lanzador y la torre en la escena.|A fixed variable can’t be changed while playing: the player always uses its starting value. The others only move between the minimum and maximum. You can also drag the launcher arrow and the tower in the scene."
+              data-text="Una variable fija no se puede modificar al jugar: el jugador usa siempre su valor inicial. Las demás solo se mueven entre el mínimo y el máximo. También puedes arrastrar la flecha del lanzador y la torre en la escena.|A fixed variable can’t be changed while playing: the player always uses its starting value. The others only move between the minimum and maximum. You can also drag the launcher arrow and the tower in the scene."
             ></small>
           </div>
 
+          <!-- Test, save and open -->
           <div class="panel">
-            <h3 data-l="Probar y guardar|Test and save"></h3>
-            <div class="btnrow">
-              <button id="ed-test" class="btn edit" type="button" data-l="Probar nivel|Test level"></button>
-              <button id="ed-save" class="btn" type="button"></button>
-              <button
-                id="ed-saveas"
-                class="btn ghost"
-                type="button"
-                data-l="Guardar como nuevo|Save as new"
-              ></button>
+            <h3 data-text="Probar y guardar|Test and save"></h3>
+            <div class="button-row">
+              <button id="testLevelButton" class="button button-accent" type="button" data-text="Probar nivel|Test level"></button>
+              <button id="saveLevelButton" class="button" type="button"></button>
+              <button id="saveAsNewButton" class="button button-outline" type="button" data-text="Guardar como nuevo|Save as new"></button>
             </div>
-            <div class="btnrow">
-              <button
-                id="ed-new"
-                class="btn ghost small"
-                type="button"
-                data-l="Nuevo en blanco|New blank level"
-              ></button>
-              <button
-                id="ed-clear"
-                class="btn ghost small"
-                type="button"
-                data-l="Quitar todas las piezas|Remove all pieces"
-              ></button>
-              <button
-                id="ed-del"
-                class="btn danger small"
-                type="button"
-                data-l="Eliminar de mis niveles|Delete from my levels"
-              ></button>
+            <div class="button-row">
+              <button id="newBlankLevelButton" class="button button-outline button-small" type="button" data-text="Nuevo en blanco|New blank level"></button>
+              <button id="removeAllPiecesButton" class="button button-outline button-small" type="button" data-text="Quitar todas las piezas|Remove all pieces"></button>
+              <button id="deleteLevelButton" class="button button-danger button-small" type="button" data-text="Eliminar de mis niveles|Delete from my levels"></button>
             </div>
-            <div class="fields">
-              <label class="field full"
-                ><span data-l="Abrir un nivel existente|Open an existing level"></span
-                ><select id="ed-open"></select
-              ></label>
-              <div class="field">
-                <button id="ed-load" class="btn ghost small" type="button" data-l="Abrir|Open"></button>
-              </div>
+            <div class="form-fields">
+              <label class="form-field form-field-full"><span data-text="Abrir un nivel existente|Open an existing level"></span><select id="openLevelSelect"></select></label>
+              <div class="form-field"><button id="openLevelButton" class="button button-outline button-small" type="button" data-text="Abrir|Open"></button></div>
             </div>
-            <div class="msg" id="ed-msg" role="status"></div>
+            <div class="editor-message" id="editorMessage" role="status"></div>
           </div>
 
+          <!-- Share with a code -->
           <div class="panel">
-            <h3 data-l="Compartir con código|Share with a code"></h3>
+            <h3 data-text="Compartir con código|Share with a code"></h3>
             <textarea
-              id="ed-code"
-              data-la="Código del nivel|Level code"
-              data-lp="Genera el código de este nivel o pega aquí uno que te hayan pasado.|Generate this level’s code, or paste one someone sent you."
+              id="levelCodeBox"
+              data-aria-text="Código del nivel|Level code"
+              data-placeholder-text="Genera el código de este nivel o pega aquí uno que te hayan pasado.|Generate this level’s code, or paste one someone sent you."
             ></textarea>
-            <div class="btnrow">
-              <button
-                id="ed-export"
-                class="btn small"
-                type="button"
-                data-l="Generar y copiar código|Generate and copy code"
-              ></button>
-              <button
-                id="ed-import"
-                class="btn ghost small"
-                type="button"
-                data-l="Cargar código pegado|Load pasted code"
-              ></button>
+            <div class="button-row">
+              <button id="exportCodeButton" class="button button-small" type="button" data-text="Generar y copiar código|Generate and copy code"></button>
+              <button id="importCodeButton" class="button button-outline button-small" type="button" data-text="Cargar código pegado|Load pasted code"></button>
             </div>
           </div>
         </div>
@@ -665,79 +498,80 @@
     </div>
 
     <!-- ================================================================
-     VENTANAS EMERGENTES: guía "Cómo jugar", "Seleccionar juego" y detalle de jugador (online),
-     cuenta regresiva y avisos. Empiezan ocultas (hidden).
-     ================================================================ -->
-    <div class="modal" id="howModal" hidden role="dialog" aria-modal="true" aria-labelledby="howTitle">
-      <div class="modalCard">
-        <div class="modalTop">
-          <h2 id="howTitle" data-l="Cómo jugar|How to play"></h2>
-          <button class="popclose" id="howClose" type="button" data-la="Cerrar|Close">×</button>
+         POP-UP WINDOWS: "How to play" guide, player details (online),
+         countdown and notices. They all start hidden.
+         ================================================================ -->
+    <div class="modal" id="howToPlayWindow" hidden role="dialog" aria-modal="true" aria-labelledby="howToPlayTitle">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h2 id="howToPlayTitle" data-text="Cómo jugar|How to play"></h2>
+          <button class="close-button" id="howToPlayCloseButton" type="button" data-aria-text="Cerrar|Close">×</button>
         </div>
-        <div class="howFig" id="howFig"></div>
-        <div class="howStep" id="howStep"></div>
-        <div class="modalNav">
-          <button class="btn ghost small" id="howPrev" type="button" data-l="← Anterior|← Back"></button>
-          <div class="dots" id="howDots"></div>
-          <button class="btn small" id="howNext" type="button"></button>
+        <div class="how-to-play-picture" id="howToPlayPicture"></div>
+        <div class="how-to-play-step" id="howToPlayStepText"></div>
+        <div class="modal-footer">
+          <button class="button button-outline button-small" id="howToPlayBackButton" type="button" data-text="← Anterior|← Back"></button>
+          <div class="step-dots" id="howToPlayDots"></div>
+          <button class="button button-small" id="howToPlayNextButton" type="button"></button>
         </div>
       </div>
     </div>
 
-    <div class="modal" id="onDetail" hidden role="dialog" aria-modal="true" aria-labelledby="odTitle">
-      <div class="modalCard wide" id="odCard"></div>
+    <div class="modal" id="playerDetailWindow" hidden role="dialog" aria-modal="true" aria-labelledby="playerDetailTitle">
+      <div class="modal-card modal-card-wide" id="playerDetailCard"></div>
     </div>
-    <div class="countdown" id="countdown" hidden aria-live="assertive"><span id="cdNum"></span></div>
-    <div class="toasts" id="toasts" aria-live="polite"></div>
+    <div class="countdown-overlay" id="countdownOverlay" hidden aria-live="assertive"><span id="countdownNumber"></span></div>
+    <div class="toast-area" id="toastArea" aria-live="polite"></div>
 
     <!-- ====================================================================
-     SCRIPTS
-     Se cargan al final para que todos los elementos de arriba ya existan.
-     EL ORDEN IMPORTA: cada archivo puede usar lo que definieron los anteriores.
-     Si agregas un archivo nuevo, ponlo antes de 7-inicio.js.
-     ==================================================================== -->
-    <!-- Núcleo: utilidades, idioma, sonido, datos de niveles y estado -->
-    <script src="js/1-nucleo/utilidades.js?v=9"></script>
-    <script src="js/1-nucleo/ecuaciones.js?v=9"></script>
-    <script src="js/1-nucleo/idioma.js?v=9"></script>
-    <script src="js/1-nucleo/sonido.js?v=9"></script>
-    <script src="js/1-nucleo/variables.js?v=9"></script>
-    <script src="js/1-nucleo/vectores.js?v=9"></script>
-    <script src="js/1-nucleo/niveles.js?v=9"></script>
-    <script src="js/1-nucleo/guardado-y-estado.js?v=9"></script>
+         SCRIPTS
+         They are loaded at the end so every element above already exists.
+         THE ORDER MATTERS: each file can use what the previous files defined.
+         If you add a new file, put it before 7-start.js.
+         ==================================================================== -->
 
-    <!-- Modo juego: cargar nivel, vectores, controles, física y fin de nivel -->
-    <script src="js/2-juego/nivel-y-hud.js?v=9"></script>
-    <script src="js/2-juego/fase-vectores.js?v=9"></script>
-    <script src="js/2-juego/controles.js?v=9"></script>
-    <script src="js/2-juego/fisica.js?v=9"></script>
-    <script src="js/2-juego/fin-de-nivel.js?v=9"></script>
+    <!-- Core: utilities, equations, language, sound, level data and saved data -->
+    <script src="js/1-core/utilities.js?v=10"></script>
+    <script src="js/1-core/equations.js?v=10"></script>
+    <script src="js/1-core/language.js?v=10"></script>
+    <script src="js/1-core/sound.js?v=10"></script>
+    <script src="js/1-core/launch-variables.js?v=10"></script>
+    <script src="js/1-core/vectors.js?v=10"></script>
+    <script src="js/1-core/levels.js?v=10"></script>
+    <script src="js/1-core/saved-data-and-state.js?v=10"></script>
 
-    <!-- Editor de niveles -->
-    <script src="js/3-editor/editor-base.js?v=9"></script>
-    <script src="js/3-editor/plantillas.js?v=9"></script>
-    <script src="js/3-editor/panel-variables.js?v=9"></script>
-    <script src="js/3-editor/tarjeta-y-piezas.js?v=9"></script>
-    <script src="js/3-editor/escena-y-guardado.js?v=9"></script>
+    <!-- Play mode: loading a level, vector puzzles, controls, physics and level end -->
+    <script src="js/2-game/level-and-hud.js?v=10"></script>
+    <script src="js/2-game/vector-puzzle.js?v=10"></script>
+    <script src="js/2-game/controls.js?v=10"></script>
+    <script src="js/2-game/physics.js?v=10"></script>
+    <script src="js/2-game/level-end.js?v=10"></script>
 
-    <!-- Dibujo de la escena en el canvas -->
-    <script src="js/4-dibujo/etiquetas.js?v=9"></script>
-    <script src="js/4-dibujo/dibujo-juego.js?v=9"></script>
-    <script src="js/4-dibujo/dibujo-editor.js?v=9"></script>
+    <!-- Level editor -->
+    <script src="js/3-editor/editor-basics.js?v=10"></script>
+    <script src="js/3-editor/editor-templates.js?v=10"></script>
+    <script src="js/3-editor/editor-variables-panel.js?v=10"></script>
+    <script src="js/3-editor/editor-card-and-pieces.js?v=10"></script>
+    <script src="js/3-editor/editor-scene-and-saving.js?v=10"></script>
 
-    <!-- Modo online -->
-    <script src="js/5-online/red.js?v=9"></script>
-    <script src="js/5-online/niveles-partida.js?v=9"></script>
-    <script src="js/5-online/host-y-jugador.js?v=9"></script>
-    <script src="js/5-online/duelo.js?v=9"></script>
-    <script src="js/5-online/pantallas-online.js?v=9"></script>
+    <!-- Drawing the scene on the canvas -->
+    <script src="js/4-drawing/labels.js?v=10"></script>
+    <script src="js/4-drawing/draw-game.js?v=10"></script>
+    <script src="js/4-drawing/draw-editor.js?v=10"></script>
 
-    <!-- Menús, guía y fondo animado -->
-    <script src="js/6-menus/menus.js?v=9"></script>
-    <script src="js/6-menus/guia-como-jugar.js?v=9"></script>
-    <script src="js/6-menus/fondo-animado.js?v=9"></script>
+    <!-- Online mode -->
+    <script src="js/5-online/network.js?v=10"></script>
+    <script src="js/5-online/match-levels.js?v=10"></script>
+    <script src="js/5-online/host-and-player.js?v=10"></script>
+    <script src="js/5-online/duel.js?v=10"></script>
+    <script src="js/5-online/online-screens.js?v=10"></script>
 
-    <!-- Arranque del juego (SIEMPRE el último) -->
-    <script src="js/7-inicio.js?v=9"></script>
+    <!-- Menus, guide and animated background -->
+    <script src="js/6-menus/menus.js?v=10"></script>
+    <script src="js/6-menus/how-to-play.js?v=10"></script>
+    <script src="js/6-menus/menu-background.js?v=10"></script>
+
+    <!-- Game start (ALWAYS the last one) -->
+    <script src="js/7-start.js?v=10"></script>
   </body>
 </html>
