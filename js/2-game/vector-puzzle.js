@@ -306,11 +306,15 @@ function renderVectorPuzzlePanels() {
     getElement('attemptsInfo').textContent = attemptsText;
   } else {
     getElement('answerForm').hidden = true;
-    getElement('solutionPanel').hidden = false;
-    getElement('solutionPanel').innerHTML = buildSolutionHtml();
+    // in online games the step by step solution is not shown
+    if (gameState.online) {
+      getElement('solutionPanel').hidden = true;
+    } else {
+      getElement('solutionPanel').hidden = false;
+      getElement('solutionPanel').innerHTML = buildSolutionHtml();
+    }
   }
 }
-
 // buildSolutionHtml(): the step by step solution shown after the vector phase.
 // Each calculation is written like in a notebook: formula, substitution and result
 // (see js/1-core/equations.js).

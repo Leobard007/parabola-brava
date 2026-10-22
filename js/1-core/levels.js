@@ -418,9 +418,9 @@ function cleanLevel(source) {
     source = {};
   }
   // levels saved by older versions of the game are translated first
-  if (isOldLevelFormat(source)) {
+  /* if (isOldLevelFormat(source)) {
     source = convertOldLevelFormat(source);
-  }
+  } */
   const worldWidth = roundToTwoDecimals(clampNumber(parseNumber(source.worldWidth, 45), 20, 150));
 
   let type = 'launch';
@@ -542,7 +542,7 @@ function decodeLevelCode(code) {
    ---------------------------------------------------------------------- */
 
 // OLD_DIRECTION_NAMES: old short direction names → current names.
-const OLD_DIRECTION_NAMES = {
+/* const OLD_DIRECTION_NAMES = {
   ur: 'upRight',
   ul: 'upLeft',
   dl: 'downLeft',
@@ -713,3 +713,4 @@ function convertOldLevelFormat(oldLevel) {
     vectorPuzzle: vectorPuzzle,
   };
 }
+ */
